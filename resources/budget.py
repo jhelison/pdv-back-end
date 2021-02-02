@@ -16,7 +16,6 @@ class Budget(Resource):
             codvend = get_raw_jwt()['identity']['codvend']
             addNewBudget(json.loads(data['data']), codvend)
         except Exception as e:
-            print(e)
             return {'message': 'Erro ao acessar ao adicionar orçamento', 'error': str(e)}, 500
                 
         return 400

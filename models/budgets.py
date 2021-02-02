@@ -4,8 +4,6 @@ import datetime
 path = r'C:\CPlus\CPLUS.FDB'
 con = fdb.connect(path, 'SYSDBA', 'masterkey')
 
-print('running')
-
 def queryToDict(sqlQuery):
     def convertToText(typeClass, num):
         if('string' not in str(typeClass)):

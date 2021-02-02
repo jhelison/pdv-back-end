@@ -18,7 +18,6 @@ class Budgets(Resource):
             codvend = get_raw_jwt()['identity']['codvend']
             budgetsList = getAllBudgets(data['page'], filters, codvend)
         except Exception as e:
-            print(e)
             return {'message': 'Erro ao acessar a lista de orçamentos', 'error': str(e)}, 500
                 
         return budgetsList, 200

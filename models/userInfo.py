@@ -116,10 +116,6 @@ def getUserInfo(user):
     now = datetime.now().date()
     startDate, endDate = getDateRange(user.startedDate)
     
-    # now = datetime(2020, 10, 15).date()
-    # startDate = datetime(2020, 10, 10).date()
-    # endDate = datetime(2020, 11, 10).date()
-    
     daylyComission = getComission(user, now, now)
     monthComission = getComission(user, startDate, endDate)
     

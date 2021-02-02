@@ -178,7 +178,6 @@ def addNewBudget(data, codvend):
             con.cursor().execute(query)
             
             
-    print(datetime.datetime.now() - start)        
     con.commit()
     
 

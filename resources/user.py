@@ -20,7 +20,6 @@ class User(Resource):
                 acess = AcessModel(user.userId, user.nomeVend, datetime.datetime.now())
                 acess.saveAcess()
         except Exception as e:
-            print(e)
             return {'message': 'Erro ao pesquisar o cliente', 'error': str(e)}, 500
                 
         if(not user):
@@ -34,14 +33,11 @@ class User(Resource):
         
     def put(self):
         data = json.loads(User.args.parse_args().data)
-        
-        print(data)
-        
+                
         try:
             if(not UserModel.findUser(data['userId'])):
                 newUser = UserModel(**data)
                 newUser.saveUser()
             
         except Exception as e:
-            print(e)
             return {'message': 'Erro ao pesquisar o cliente', 'error': str(e)}, 500
