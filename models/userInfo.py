@@ -95,19 +95,19 @@ def getComission(user, startDate, endDate):
         'finalComission': sales[0] - returns[0]
     }
 
-def getComissionObjectDay(user):
+def getComissionObjectDay(user, totalComission, startDate, endDate):
     workingHours = [8.5, 8.5, 8.5, 8.5, 8.5, 6.5, 0]
-    startDate, endDate = getDateRange(user.startedDate)
     
     step = dt.timedelta(days=1)
     
-    totalMonthHours = 0
+    leftMonthHours = 0
     while startDate <= endDate:
-        totalMonthHours += workingHours[startDate.weekday()]
+        leftMonthHours += workingHours[startDate.weekday()]
         startDate += step
                 
     if user.comissionObjective:
-        return (user.comissionObjective / totalMonthHours) * workingHours[datetime.now().weekday()]
+        objective = ((user.comissionObjective - totalComission) / leftMonthHours) * workingHours[datetime.now().weekday()]
+        return objective
     else:
         return 0
     
@@ -130,7 +130,7 @@ def getUserInfo(user):
         'comissionMult': str(user.comissionMult),
         'today': {
             'totalSales': str(daylySales),
-            'objective': ("%.2f" % getComissionObjectDay(user)),
+            'objective': ("%.2f" % getComissionObjectDay(user, monthComission['finalComission'], now, endDate)),
             'returns': str(daylyReturns),
             'saleFinalComission': ("%.2f" % daylyComission['saleFinalComission']),
             'saleBruteTotal': ("%.2f" % daylyComission['saleBruteTotal']),
@@ -156,6 +156,6 @@ def getUserInfo(user):
             'returnBudgetDifer': ("%.2f" % monthComission['returnBudgetDifer']),
             'finalComission': ("%.2f" % monthComission['finalComission'])
         },
-        'notice': "\"   Aplicativo em fase beta! Apresentar qualquer erro para (98) 9 8702-3066.\""
+        'notice': "\"   1.1.0 - Alterado a forma de calculo do objectivo diario, agora ele leva em consideração valores atuais de comissão\""
     }    
     return data
