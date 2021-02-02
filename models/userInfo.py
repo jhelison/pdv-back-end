@@ -100,6 +100,8 @@ def getComissionObjectDay(user, totalComission, startDate, endDate):
     
     step = dt.timedelta(days=1)
     
+    totalComission = float(totalComission)
+    
     leftMonthHours = 0
     while startDate <= endDate:
         leftMonthHours += workingHours[startDate.weekday()]
