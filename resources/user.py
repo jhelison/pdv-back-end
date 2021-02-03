@@ -28,7 +28,7 @@ class User(Resource):
         if(not user.flagHaveAcess):
             return {'message': 'Acesso não autorizado'}, 401
 
-        acessToken = create_access_token(identity={'userId':user.userId, 'codvend':user.codvend}, expires_delta=datetime.timedelta(hours=9))
+        acessToken = create_access_token(identity={'userId':user.userId, 'codvend':user.codvend, 'flagAdmin':user.flagAdmin}, expires_delta=datetime.timedelta(hours=9))
         return acessToken, 200
         
     def put(self):

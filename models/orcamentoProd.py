@@ -63,7 +63,7 @@ def basicQueryToDict(sqlQuery):
     data = cur.fetchall()
     return [{desc[0]:convertToText(desc[1],row[index]) for index, desc in enumerate(cur.description)} for row in data]
 
-def queryToDict(sqlQuery):
+def queryToDict(sqlQuery, flagAdmin):
     def convertToText(typeClass, num):
         if('string' not in str(typeClass)):
             try:
@@ -95,7 +95,7 @@ def queryToDict(sqlQuery):
         'VALORTOTAL': addDecimal(productDict['VALORTOTAL']),
         'NOMEPROD': productDict['NOMEPROD'],
         'UNIDADE': productDict['UNIDADE'],
-        'DESCMAXIMO': productDict['DESCMAXIMO'],
+        'DESCMAXIMO': productDict['DESCMAXIMO'] if not flagAdmin else 100.0,
         'ESTATU': productDict['ESTATU']
         }
         
@@ -203,7 +203,7 @@ def buildBudgetProductData(budgetProduct, index, orcData):
     
     return {**inserData, **fixedData, **varData}
 
-def getByCodorc(val):
+def getByCodorc(val, flagAdmin):
     query = f"""
     SELECT ORCAMENTOPROD.CODPROD, PRODUTO.CODIGO, ORCAMENTOPROD.QUANTIDADE, ORCAMENTOPROD.VALORUNITARIO,
     ORCAMENTOPROD.PRECOTABELA, ORCAMENTOPROD.ALIQDESCONTOITEM, ORCAMENTOPROD.VALORDESCONTOITEM,
@@ -216,4 +216,4 @@ def getByCodorc(val):
     AND PRODUTOESTOQUE.CODEMPRESA = 1
     """
     
-    return queryToDict(query)
+    return queryToDict(query, flagAdmin)

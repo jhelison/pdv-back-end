@@ -3,7 +3,7 @@ import fdb
 path = r'C:\CPlus\CPLUS.FDB'
 con = fdb.connect(path, 'SYSDBA', 'masterkey')
 
-def queryToDict(sqlQuery):
+def queryToDict(sqlQuery, flagAdmin):
     def convertToText(typeClass, num):
         if('string' not in str(typeClass)):
             try:
@@ -32,7 +32,7 @@ def queryToDict(sqlQuery):
             'VALORTOTAL': price,
             'NOMEPROD': productDict['NOMEPROD'],
             'UNIDADE': productDict['UNIDADE'],
-            'DESCMAXIMO': productDict['DESCMAXIMO'],
+            'DESCMAXIMO': productDict['DESCMAXIMO'] if not flagAdmin else 100.0,
             'ESTATU': productDict['ESTATU']
         }
         
@@ -41,7 +41,7 @@ def queryToDict(sqlQuery):
     data = cur.fetchall()
     return [addExtraInfo({desc[0]:convertToText(desc[1],row[index]) for index, desc in enumerate(cur.description)}) for row in data]
 
-def getByNameOrCode(text):
+def getByNameOrCode(text, flagAdmin):
     text = text.replace('\'', '\'\'')
     def buildInteliSearch():
         searchQuery = ''
@@ -72,5 +72,5 @@ def getByNameOrCode(text):
     {getSearchColumns()}
     ORDER BY PRODUTOPRECO.PRECO 
     """
-    res = queryToDict(query)
+    res = queryToDict(query, flagAdmin)
     return res

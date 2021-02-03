@@ -3,7 +3,10 @@
 
 ## Changelog
 
-## 1.1.0
+### 1.2.0
+- Agora o usuario administrador pode dar 100 % de desconto nos itens
+
+### 1.1.0
 - Alterado a forma de calculo do objectivo diario, agora ele leva em consideração valores atuais de comissão
 
 ### 1.0.0
