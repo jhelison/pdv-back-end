@@ -1,9 +1,6 @@
 from datetime import datetime
 import datetime as dt
-import fdb
-
-path = r'C:\CPlus\CPLUS.FDB'
-con = fdb.connect(path, 'SYSDBA', 'masterkey')
+from firebirdConnection import con
 
 def getMonthRange():
     now = datetime.now().date()

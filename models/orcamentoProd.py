@@ -1,7 +1,4 @@
-import fdb
-
-path = r'C:\CPlus\CPLUS.FDB'
-con = fdb.connect(path, 'SYSDBA', 'masterkey')
+from firebirdConnection import con
 
 fixedData = {
     "BASEICMS" : 0.0000,

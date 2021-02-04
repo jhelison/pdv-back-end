@@ -1,10 +1,7 @@
-import fdb
+from firebirdConnection import con
 import datetime
 
 from models.orcamentoProd import buildBudgetProductData, getORCAMENTOPRODCodes
-
-path = r'C:\CPlus\CPLUS.FDB'
-con = fdb.connect(path, 'SYSDBA', 'masterkey')
 
 fixedData = {
     "IDENTIFICADORDESTINO" : "1",

@@ -1,8 +1,5 @@
-import fdb
+from firebirdConnection import con
 import datetime
-
-path = r'C:\CPlus\CPLUS.FDB'
-con = fdb.connect(path, 'SYSDBA', 'masterkey')
 
 def parseDictFromFlag(flag):
     if(flag == 'Y'):
