@@ -17,7 +17,7 @@ class User(Resource):
         try:
             user = UserModel.findUser(userId)
             if(user and user.flagHaveAcess):
-                acess = AcessModel(user.userId, user.nomeVend, datetime.datetime.now())
+                acess = AcessModel(user.userId, 'userGET')
                 acess.saveAcess()
         except Exception as e:
             return {'message': 'Erro ao pesquisar o cliente', 'error': str(e)}, 500

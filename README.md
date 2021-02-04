@@ -3,6 +3,9 @@
 
 ## Changelog
 
+### 1.2.1
+- Adicionado mais pontos para userAcess
+
 ### 1.2.0
 - Agora o usuario administrador pode dar 100 % de desconto nos itens
 

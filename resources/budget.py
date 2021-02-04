@@ -3,6 +3,7 @@ import json
 from flask_jwt_extended import jwt_required, get_raw_jwt
 
 from models.budget import addNewBudget
+from models.acess import AcessModel
 
 class Budget(Resource):
     args = reqparse.RequestParser()
@@ -10,10 +11,12 @@ class Budget(Resource):
     
     @jwt_required
     def post(self):
-        data = Budget.args.parse_args()        
+        data = Budget.args.parse_args()    
         
         try:
             codvend = get_raw_jwt()['identity']['codvend']
+            acess = AcessModel(get_raw_jwt()['identity']['userId'], 'budgetPOST')
+            acess.saveAcess()
             addNewBudget(json.loads(data['data']), codvend)
         except Exception as e:
             return {'message': 'Erro ao acessar ao adicionar orçamento', 'error': str(e)}, 500

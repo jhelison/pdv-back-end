@@ -1,8 +1,9 @@
 from flask_restful import Resource, reqparse
 import json
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_raw_jwt
 
 from models.customer import getByNameOrCode, checkIfUnique, getNextCod, insertNewCustomer, updateCustomer, getByCode, getByName
+from models.acess import AcessModel
 
 class Customer(Resource):
     args = reqparse.RequestParser()
@@ -24,6 +25,8 @@ class Customer(Resource):
         data = json.loads(Customer.args.parse_args().data)
                         
         try:
+            acess = AcessModel(get_raw_jwt()['identity']['userId'], 'customerPUT')
+            acess.saveAcess()
             isUnique, field = checkIfUnique(data)
         except Exception as e:
             return {'message': 'Erro na tentativa de cadastro', 'error': str(e)}, 500
@@ -50,6 +53,8 @@ class Customer(Resource):
         data = json.loads(Customer.args.parse_args().data)
                 
         try:
+            acess = AcessModel(get_raw_jwt()['identity']['userId'], 'customerPOST')
+            acess.saveAcess()
             updateCustomer(data)
         except Exception as e:
             return {'message': 'Erro na tentativa de atualização', 'error': str(e)}, 500
