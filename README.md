@@ -3,6 +3,9 @@
 
 ## Changelog
 
+### 1.2.2
+- Corrigido bug onde o database retornava Integer Overflow
+
 ### 1.2.1
 - Adicionado mais pontos para userAcess
 

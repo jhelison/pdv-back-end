@@ -99,12 +99,12 @@ def buildData(data, codvend):
             "FLAGCLI" : "Y" if data['customer']['fromDatabase'] else "N",
             "NOMECLI" : data['customer']['data']['NOMECLI'],
             "CODVENDED" : codvend,
-            "OBS" : 'VENDA RELIZADA POR TELEFONE, ' + data['OBS'],
+            "OBS" : data['OBS'],
             "ALIQDESCONTO" : 0.0000, #Fixed
             "VALORFRETE" : float(data['VALORFRETE']),
             "VALORACRESCIMO" : 0.0000,
             "OBSNOTAFISCAL" : data['OBSNOTAFISCAL'],
-            "CODCFOP" : "5102" if data['customer']['data']['ESTADO'] == 'MA' or data['customer']['data']['ESTADO'] == '' else "6102", #ADICIONAR COMPARAÇÂO
+            "CODCFOP" : "5102" if data['customer']['data']['ESTADO'] == 'MA' or data['customer']['data']['ESTADO'] == '' else "6102",
             "VALORDESCONTO" : 0.0000, #Fixed
             "ALIQACRESCIMO" : 0.0000, #Fixed
             "VALORTOTALORCAMENTO" : sum([float(product["VALORTOTAL"]) for product in data['products']]) + float(data['VALORFRETE']),

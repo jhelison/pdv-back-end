@@ -54,10 +54,10 @@ def getCount(user, startDate, endDate):
 
 def getComission(user, startDate, endDate):
     query = f"""
-    SELECT COALESCE(SUM(MOVENDAPROD.VALORTOTAL  * (PRODUTO.COMISSAO / 100)),0) + COALESCE(SUM((COALESCE((MOVENDA.VALORACRESCIMO / MOVENDA.VALORTOTALPRODUTOS),0) - COALESCE((MOVENDA.VALORDESCONTO / MOVENDA.VALORTOTALPRODUTOS),0) * MOVENDAPROD.VALORTOTAL) * (PRODUTO.COMISSAO / 100)),0) AS saleFinalComission,
-    COALESCE(SUM(MOVENDAPROD.VALORTOTAL),0) AS saleBruteTotal,
-    COALESCE(SUM(CASE WHEN PRODUTO.COMISSAO != 0 THEN MOVENDAPROD.VALORTOTAL END),0) AS saleLiquidTotal,
-    COALESCE(SUM((COALESCE((MOVENDA.VALORACRESCIMO / MOVENDA.VALORTOTALPRODUTOS),0) - COALESCE((MOVENDA.VALORDESCONTO / MOVENDA.VALORTOTALPRODUTOS),0) * MOVENDAPROD.VALORTOTAL) * (PRODUTO.COMISSAO)),0) AS saleBudgetDifer
+    SELECT COALESCE(SUM(CAST(MOVENDAPROD.VALORTOTAL AS DOUBLE PRECISION)  * (CAST(PRODUTO.COMISSAO AS DOUBLE PRECISION) / 100)),0) + COALESCE(SUM((COALESCE((CAST(MOVENDA.VALORACRESCIMO AS DOUBLE PRECISION) / CAST(MOVENDA.VALORTOTALPRODUTOS AS DOUBLE PRECISION)),0) - COALESCE((CAST(MOVENDA.VALORDESCONTO AS DOUBLE PRECISION) / CAST(MOVENDA.VALORTOTALPRODUTOS AS DOUBLE PRECISION)),0) * CAST(MOVENDAPROD.VALORTOTAL AS DOUBLE PRECISION)) * (CAST(PRODUTO.COMISSAO AS DOUBLE PRECISION) / 100)),0) AS saleFinalComission,
+    COALESCE(SUM(CAST(MOVENDAPROD.VALORTOTAL AS DOUBLE PRECISION)),0) AS saleBruteTotal,
+    COALESCE(SUM(CASE WHEN CAST(PRODUTO.COMISSAO AS DOUBLE PRECISION) != 0 THEN CAST(MOVENDAPROD.VALORTOTAL AS DOUBLE PRECISION) END),0) AS saleLiquidTotal,
+    COALESCE(SUM((COALESCE((CAST(MOVENDA.VALORACRESCIMO AS DOUBLE PRECISION) / CAST(MOVENDA.VALORTOTALPRODUTOS AS DOUBLE PRECISION)),0) - COALESCE((CAST(MOVENDA.VALORDESCONTO AS DOUBLE PRECISION) / CAST(MOVENDA.VALORTOTALPRODUTOS AS DOUBLE PRECISION)),0) * CAST(MOVENDAPROD.VALORTOTAL AS DOUBLE PRECISION)) * (CAST(PRODUTO.COMISSAO AS DOUBLE PRECISION))),0) AS saleBudgetDifer
     FROM MOVENDAPROD
     INNER JOIN MOVENDA ON MOVENDAPROD.CODMOVENDA = MOVENDA.CODMOVENDA AND DATA >= '{startDate}' AND DATA <= '{endDate}' AND MOVENDA.CODVENDED = '{user.codvend}'
     LEFT JOIN PRODUTO ON MOVENDAPROD.CODPROD = PRODUTO.CODPROD
@@ -80,15 +80,15 @@ def getComission(user, startDate, endDate):
     """
     returns = con.cursor().execute(query).fetchone()
     return {
-        'saleFinalComission': sales[0],
-        'saleBruteTotal': sales[1],
-        'saleLiquidTotal': sales[2],
-        'saleBudgetDifer': sales[3],
-        'returnFinalComission': returns[0],
-        'returnBruteTotal': returns[1],
-        'returnLiquidTotal': returns[2],
-        'returnBudgetDifer': returns[3],
-        'finalComission': sales[0] - returns[0]
+        'saleFinalComission': float(sales[0]),
+        'saleBruteTotal': float(sales[1]),
+        'saleLiquidTotal': float(sales[2]),
+        'saleBudgetDifer': float(sales[3]),
+        'returnFinalComission': float(returns[0]),
+        'returnBruteTotal': float(returns[1]),
+        'returnLiquidTotal': float(returns[2]),
+        'returnBudgetDifer': float(returns[3]),
+        'finalComission': float(sales[0]) - float(returns[0])
     }
 
 def getComissionObjectDay(user, totalComission, startDate, endDate):
@@ -154,6 +154,6 @@ def getUserInfo(user):
             'returnBudgetDifer': ("%.2f" % monthComission['returnBudgetDifer']),
             'finalComission': ("%.2f" % monthComission['finalComission'])
         },
-        'notice': "\"   1.1.0 - Alterado a forma de calculo do objectivo diario, agora ele leva em consideração valores atuais de comissão\""
+        'notice': "\"  \""
     }    
     return data
