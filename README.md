@@ -3,6 +3,9 @@
 
 ## Changelog
 
+### 1.2.3
+- Corrigida forma de sequenciamentos dos id em orcamentoprod
+
 ### 1.2.2
 - Corrigido bug onde o database retornava Integer Overflow
 

@@ -124,27 +124,16 @@ def getNextCod():
 
 def getORCAMENTOPRODCodes(quantity):
     codes = []
-    query = """
-    SELECT SKIP ((SELECT COUNT(*) FROM ORCAMENTOPROD) - 1)
-    CODORCPROD FROM ORCAMENTOPROD
-    ORDER BY CODORCPROD
-    """
-    res = basicQueryToDict(query)[0]
-    res['CODORCPROD'] = int(res['CODORCPROD']) + 2
     
-    while True:
-        CODORCPRODtring = res['CODORCPROD']
-        CODORCPRODtring = f'{CODORCPRODtring:09}'
-        query = f"SELECT CODORCPROD FROM ORCAMENTOPROD WHERE CODORCPROD = '{CODORCPRODtring}'"
-        ans = basicQueryToDict(query)
-        if(len(ans) == 0):
-            CODORCPROD = res['CODORCPROD']
-            codes.append(f'{CODORCPROD:09}')
-            if(len(codes) == quantity):
-                break
-        res['CODORCPROD'] = res['CODORCPROD'] + 1
+    query = """
+    SELECT NEXT VALUE FOR SEQ_CODORCPROD FROM RDB$DATABASE;
+    """
+    
+    for num in range(quantity):
+        code = con.cursor().execute(query).fetchone()[0]
+        codes.append(f'{code:09}')
         
-    return codes 
+    return codes
 
 def buildBudgetProductData(budgetProduct, index, orcData):
     CODPROD = budgetProduct['CODPROD']
