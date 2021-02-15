@@ -3,6 +3,9 @@
 
 ## Changelog
 
+### 1.2.4
+- Corrigido query que retornava divisão por zero
+
 ### 1.2.3
 - Corrigida forma de sequenciamentos dos id em orcamentoprod
 
