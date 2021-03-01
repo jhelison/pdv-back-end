@@ -16,7 +16,7 @@ def queryToDict(sqlQuery):
     data = cur.fetchall()
     return [{desc[0]:convertToText(desc[1],row[index]) for index, desc in enumerate(cur.description)} for row in data]
         
-def getAllBudgets(page, filters, codvend):
+def getAllBudgets(page, filters, codvend, flagAdmin):
     now = datetime.datetime.now()
     
     filtersQuery = ''
@@ -26,6 +26,10 @@ def getAllBudgets(page, filters, codvend):
         filtersQuery += ' AND DATAFATURADO IS NULL'
     if(not filters['REFEITO']):
         filtersQuery += " AND (SELECT COUNT(*) FROM ORCAMENTOPROD WHERE ORCAMENTO.CODORC = ORCAMENTOPROD.CODORC) != '0'"
+        
+    sellerQuery = ''
+    if not flagAdmin:
+        sellerQuery = f"AND CODVENDED = '{codvend}'"
     
     query = f"""
     SELECT FIRST 30 SKIP {30 * (page - 1)}
@@ -34,7 +38,7 @@ def getAllBudgets(page, filters, codvend):
     FROM ORCAMENTO
     LEFT JOIN TIPOMOVIMENTO ON ORCAMENTO.CODTIPOMOVIMENTO = TIPOMOVIMENTO.CODTIPOMOVIMENTO
     WHERE DATA = '{now.date()}'
-    AND CODVENDED = '{codvend}'
+    {sellerQuery}
     AND NUMCUPOM IS NULL
     {filtersQuery}
     ORDER BY DATA DESC, HORA DESC

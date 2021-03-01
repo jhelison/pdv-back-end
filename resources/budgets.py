@@ -16,7 +16,8 @@ class Budgets(Resource):
                 
         try:
             codvend = get_raw_jwt()['identity']['codvend']
-            budgetsList = getAllBudgets(data['page'], filters, codvend)
+            flagAdmin = get_raw_jwt()['identity']['flagAdmin']
+            budgetsList = getAllBudgets(data['page'], filters, codvend, flagAdmin)
         except Exception as e:
             return {'message': 'Erro ao acessar a lista de orçamentos', 'error': str(e)}, 500
                 
