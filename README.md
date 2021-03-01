@@ -3,6 +3,9 @@
 
 ## Changelog
 
+### 1.2.5
+- Administradores podem ver todos os orçamentos de todos os vendedores
+
 ### 1.2.4
 - Corrigido query que retornava divisão por zero
 
