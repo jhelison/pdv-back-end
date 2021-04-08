@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
 import json
-from flask_jwt_extended import jwt_required, get_raw_jwt
+from flask_jwt_extended import jwt_required, get_jwt
 
 from models.budgets import getAllBudgets
 
@@ -15,8 +15,8 @@ class Budgets(Resource):
         filters = json.loads(data['filters'])
                 
         try:
-            codvend = get_raw_jwt()['identity']['codvend']
-            flagAdmin = get_raw_jwt()['identity']['flagAdmin']
+            codvend = get_jwt()['identity']['codvend']
+            flagAdmin = get_jwt()['identity']['flagAdmin']
             budgetsList = getAllBudgets(data['page'], filters, codvend, flagAdmin)
         except Exception as e:
             return {'message': 'Erro ao acessar a lista de orçamentos', 'error': str(e)}, 500

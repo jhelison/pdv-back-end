@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from flask_jwt_extended import jwt_required, get_raw_jwt
+from flask_jwt_extended import jwt_required, get_jwt
 
 from models.user import UserModel
 from models.userInfo import getUserInfo
@@ -8,7 +8,7 @@ class UserInfo(Resource):
     
     @jwt_required
     def get(self):
-        userId = get_raw_jwt()['identity']['userId']
+        userId = get_jwt()['identity']['userId']
         
         user = UserModel.findUser(userId)
         

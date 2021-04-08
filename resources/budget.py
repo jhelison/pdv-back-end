@@ -1,6 +1,6 @@
 from flask_restful import Resource, reqparse
 import json
-from flask_jwt_extended import jwt_required, get_raw_jwt
+from flask_jwt_extended import jwt_required, get_jwt
 
 from models.budget import addNewBudget
 from models.acess import AcessModel
@@ -14,8 +14,8 @@ class Budget(Resource):
         data = Budget.args.parse_args()    
         
         try:
-            codvend = get_raw_jwt()['identity']['codvend']
-            acess = AcessModel(get_raw_jwt()['identity']['userId'], 'budgetPOST')
+            codvend = get_jwt()['identity']['codvend']
+            acess = AcessModel(get_jwt()['identity']['userId'], 'budgetPOST')
             acess.saveAcess()
             addNewBudget(json.loads(data['data']), codvend)
         except Exception as e:
