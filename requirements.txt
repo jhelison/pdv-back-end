@@ -1,0 +1,5 @@
+fdb
+Flask
+flask_jwt_extended
+flask_restful
+flask_sqlalchemy
