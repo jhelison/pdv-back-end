@@ -7,7 +7,7 @@ class Products(Resource):
     args = reqparse.RequestParser()
     args.add_argument('query', type=str, required=True, help="The field name cant be empty")
     
-    @jwt_required
+    @jwt_required()
     def get(self):
         data = Products.args.parse_args()
                                 

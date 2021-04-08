@@ -1,10 +1,11 @@
 from flask_restful import Resource, reqparse
 import json
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
 import datetime
 
 from models.user import UserModel
 from models.acess import AcessModel
+from models.userInfo import getUserInfo
 
 class User(Resource):
     args = reqparse.RequestParser()
@@ -41,3 +42,19 @@ class User(Resource):
             
         except Exception as e:
             return {'message': 'Erro ao pesquisar o cliente', 'error': str(e)}, 500
+
+class UserInfo(Resource):
+    
+    @jwt_required()
+    def get(self):
+        userId = get_jwt()['identity']['userId']
+        
+        user = UserModel.findUser(userId)
+        
+        try:
+            data = getUserInfo(user)
+        except Exception as e:
+            return {'message': 'Erro ao carregar informações', 'error': str(e)}, 500
+        
+        
+        return data, 200

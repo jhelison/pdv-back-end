@@ -20,7 +20,7 @@ class Customer(Resource):
         
         return customer, 200
     
-    @jwt_required
+    @jwt_required()
     def put(self):
         data = json.loads(Customer.args.parse_args().data)
                         
@@ -48,7 +48,7 @@ class Customer(Resource):
         except Exception as e:
             return {'message': 'Erro na tentativa de cadastro', 'error': str(e)}, 500
     
-    @jwt_required
+    @jwt_required()
     def post(self):
         data = json.loads(Customer.args.parse_args().data)
                 
@@ -64,4 +64,16 @@ class Customer(Resource):
         except Exception as e:
             return {'message': 'Erro na tentativa de atualização', 'error': str(e)}, 500
         
+class Customers(Resource):
+    args = reqparse.RequestParser()
+    args.add_argument('query', type=str, required=True, help="The field name cant be empty")
+    
+    def get(self):
+        data = Customers.args.parse_args()
         
+        try:
+            customersFinded = getByNameOrCode(data['query'])
+        except Exception as e:
+            return {'message': 'Erro ao pesquisar o cliente', 'error': str(e)}, 500
+        
+        return customersFinded, 200
