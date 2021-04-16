@@ -3,6 +3,7 @@ from flask_restful import Api
 import random
 from flask_jwt_extended import JWTManager
 import os
+import sqlalchemy.sql.default_comparator
 
 from resources.products import Products
 from resources.customer import Customer, Customers
