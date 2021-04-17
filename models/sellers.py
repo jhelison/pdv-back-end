@@ -1,5 +1,6 @@
 from firebirdConnection import con
 
+
 def queryToDict(sqlQuery):
     def convertToText(typeClass, num):
         if('string' not in str(typeClass)):
@@ -11,11 +12,12 @@ def queryToDict(sqlQuery):
                 return ''
         else:
             return num
-        
+
     cur = con.cursor()
     cur.execute(sqlQuery)
     data = cur.fetchall()
-    return [{desc[0]:convertToText(desc[1],row[index]) for index, desc in enumerate(cur.description)} for row in data]
+    return [{desc[0]:convertToText(desc[1], row[index]) for index, desc in enumerate(cur.description)} for row in data]
+
 
 def getAllSellers():
     query = """
@@ -23,5 +25,5 @@ def getAllSellers():
     FROM VENDEDOR
     WHERE INATIVO = 'N'
     """
-    
+
     return queryToDict(query)

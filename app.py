@@ -13,7 +13,7 @@ from resources.user import User, UserInfo
 from resources.sellers import Sellers
 
 app = Flask(__name__)
-#Database is installed on appdata/user/roaming
+# Database is installed on appdata/user/roaming
 db_path = os.path.join(os.getenv('APPDATA'), 'CPlusAPP/')
 db_uri = 'sqlite:///{}'.format(os.path.join(db_path, 'app.db'))
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
@@ -22,16 +22,19 @@ app.config['JWT_SECRET_KEY'] = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE
 api = Api(app)
 jwt = JWTManager(app)
 
+
 @app.before_first_request
 def buildDatabase():
     if not os.path.exists(db_path):
         os.makedirs(db_path)
     database.create_all()
 
+
 @app.route('/')
 def home():
     ip_address = request.remote_addr
     return f'<h1>Backend Running...{random.randint(1, 200)} {ip_address}:5000</h1>', 200
+
 
 api.add_resource(Products, '/products/')
 api.add_resource(Customer, '/customer/')

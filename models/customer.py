@@ -1,29 +1,31 @@
 from firebirdConnection import con
 import datetime
 
+
 def parseDictFromFlag(flag):
     if(flag == 'Y'):
         return {
-            'CNPJ':'',
-            'INSCR':'',
-            'CONJFANTASIA':''
+            'CNPJ': '',
+            'INSCR': '',
+            'CONJFANTASIA': ''
         }
     else:
         return {
-            'CPF':''
+            'CPF': ''
         }
-        
+
+
 def parseData(data):
     def customReplace(text):
         return text.replace('.', '').replace('/', '').replace('(', '').replace(')', '').replace('-', '')
-    
+
     def getIndDest():
         if(data['FLAGFISICA'] == 'Y'):
             return '9'
         else:
             if(data['INSCR']):
                 return '1'
-    
+
     newData = data
     newData['CPF'] = customReplace(newData['CPF'])
     newData['CNPJ'] = customReplace(newData['CNPJ'])
@@ -31,9 +33,9 @@ def parseData(data):
     newData['CEP'] = customReplace(newData['CEP'])
     newData['TELEFONE'] = customReplace(newData['TELEFONE'])
     newData['INDIEDEST'] = getIndDest()
-    
+
     return newData
-    
+
 
 def queryToDict(sqlQuery):
     def convertToText(typeClass, num):
@@ -46,11 +48,12 @@ def queryToDict(sqlQuery):
                 return ''
         else:
             return num
-        
+
     cur = con.cursor()
     cur.execute(sqlQuery)
     data = cur.fetchall()
-    return [{desc[0]:convertToText(desc[1],row[index]) for index, desc in enumerate(cur.description)} for row in data]
+    return [{desc[0]:convertToText(desc[1], row[index]) for index, desc in enumerate(cur.description)} for row in data]
+
 
 def getByNameOrCode(text):
     def buildInteliSearch():
@@ -61,7 +64,7 @@ def getByNameOrCode(text):
             if((index + 1) < len(searchedText)):
                 searchQuery += " AND "
         return searchQuery
-    
+
     def getSearchColumns():
         if(text):
             try:
@@ -72,13 +75,14 @@ def getByNameOrCode(text):
             except:
                 return f" WHERE ({ buildInteliSearch() })"
         return ""
-        
+
     query = f"""
     SELECT FIRST 25 CODCLI, CODIGO, NOMECLI, ENDERECO ,BAIRRO, CIDADE, ESTADO, CEP, TELEFONE, CNPJ, CPF, INSCR, FLAGFISICA, DATCAD, LAST_CHANGE, EMAIL, CONJFANTASIA, NUMEROLOGRADOURO, COMPLEMENTOLOGRADOURO
     FROM CLIENTE
     {getSearchColumns()}"""
     res = queryToDict(query)
     return res
+
 
 def getByCode(code):
     query = f"""
@@ -88,6 +92,7 @@ def getByCode(code):
     """
     return queryToDict(query)[0]
 
+
 def getByName(name):
     query = f"""
     SELECT CODCLI, CODIGO, NOMECLI, ENDERECO ,BAIRRO, CIDADE, ESTADO, CEP, TELEFONE, CNPJ, CPF, INSCR, FLAGFISICA, DATCAD, LAST_CHANGE, EMAIL, CONJFANTASIA, NUMEROLOGRADOURO, COMPLEMENTOLOGRADOURO
@@ -96,6 +101,7 @@ def getByName(name):
     """
     return queryToDict(query)[0]
 
+
 def checkIfUnique(data):
     if(data['NOMECLI']):
         name = data['NOMECLI']
@@ -103,7 +109,7 @@ def checkIfUnique(data):
         res = queryToDict(query)
         if(len(res) != 0):
             return False, 'NOMECLI'
-    
+
         if(data['FLAGFISICA'] == 'Y'):
             if(data['CPF']):
                 cpf = data['CPF']
@@ -121,12 +127,13 @@ def checkIfUnique(data):
         return True, ''
     return False, 'NOMECLI'
 
+
 def getNextCod():
     query = "SELECT SKIP ((SELECT count(*) - 1 FROM CLIENTE)) CODCLI, CODIGO FROM CLIENTE ORDER BY CODCLI"
     res = queryToDict(query)[0]
     res['CODCLI'] = int(res['CODCLI'])
     res['CODIGO'] = int(res['CODIGO'])
-    
+
     while True:
         CODCLItring = res['CODCLI']
         CODCLItring = f'{CODCLItring:08}'
@@ -135,7 +142,7 @@ def getNextCod():
         if(len(ans) == 0):
             break
         res['CODCLI'] = res['CODCLI'] + 1
-        
+
     while True:
         res['CODIGO'] = res['CODIGO'] + 1
         CODIGOString = res['CODIGO']
@@ -144,56 +151,61 @@ def getNextCod():
         ans = queryToDict(query)
         if(len(ans) == 0):
             break
-    
+
     CODCLI = res['CODCLI']
     CODIGO = res['CODIGO']
     res['CODCLI'] = f'{CODCLI:08}'
     res['CODIGO'] = f'{CODIGO:06}'
-    
+
     return res
+
 
 def insertNewCustomer(data):
     now = datetime.datetime.now()
-    dates = {'DATCAD': now.date(), 'LAST_CHANGE': now.strftime("%Y-%m-%d %H:%M:%S")}
-        
-    dataWithDate = {**parseData(data), **dates, **parseDictFromFlag(data['FLAGFISICA'])}
-    
+    dates = {'DATCAD': now.date(), 'LAST_CHANGE': now.strftime(
+        "%Y-%m-%d %H:%M:%S")}
+
+    dataWithDate = {**parseData(data), **dates, **
+                    parseDictFromFlag(data['FLAGFISICA'])}
+
     columnsQuery = '('
     valuesQuery = '('
     for item in dataWithDate.items():
         if(item[1]):
             columnsQuery += item[0] + ', '
-            valuesQuery += f"'{item[1]}'"  + ', '
+            valuesQuery += f"'{item[1]}'" + ', '
     columnsQuery = columnsQuery[:-2] + ')'
     valuesQuery = valuesQuery[:-2] + ')'
-    
+
     query = f"""
     INSERT INTO CLIENTE {columnsQuery}
     VALUES {valuesQuery}
     """
-    
+
     con.cursor().execute(query)
     con.commit()
-    
+
+
 def updateCustomer(data):
     now = datetime.datetime.now()
     nowDict = {'LAST_CHANGE': now.strftime("%Y-%m-%d %H:%M:%S")}
-    
-    newData = {**parseData(data), **nowDict, **parseDictFromFlag(data['FLAGFISICA'])}
-    
+
+    newData = {**parseData(data), **nowDict, **
+               parseDictFromFlag(data['FLAGFISICA'])}
+
     dataQuery = ''
     for item in newData.items():
         if(item[1]):
             dataQuery += item[0] + ' = ' + f"'{item[1]}', "
     dataQuery = dataQuery[:-2]
-    
+
     cod = data['CODCLI']
-    
+
     query = f"""
     UPDATE CLIENTE
     SET {dataQuery}
     WHERE CODCLI = '{cod}'
     """
-    
+
     con.cursor().execute(query)
     con.commit()

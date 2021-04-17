@@ -1,5 +1,6 @@
 from firebirdConnection import con
 
+
 def queryToDict(sqlQuery, flagAdmin):
     def convertToText(typeClass, num):
         if('string' not in str(typeClass)):
@@ -9,16 +10,16 @@ def queryToDict(sqlQuery, flagAdmin):
                 return ''
         else:
             return num
-        
+
     def addExtraInfo(productDict):
         try:
             price = "{:.2f}".format(float(productDict['PRECO']))
         except:
             price = "0.00"
-            
+
         return {
             'CODPROD': productDict['CODPROD'],
-            'CODIGO' : productDict['CODIGO'],
+            'CODIGO': productDict['CODIGO'],
             'QUANTIDADE': '1.0',
             'VALORUNITARIO': price,
             'PRECOTABELA': price,
@@ -32,14 +33,16 @@ def queryToDict(sqlQuery, flagAdmin):
             'DESCMAXIMO': productDict['DESCMAXIMO'] if not flagAdmin else 100.0,
             'ESTATU': productDict['ESTATU']
         }
-        
+
     cur = con.cursor()
     cur.execute(sqlQuery)
     data = cur.fetchall()
-    return [addExtraInfo({desc[0]:convertToText(desc[1],row[index]) for index, desc in enumerate(cur.description)}) for row in data]
+    return [addExtraInfo({desc[0]:convertToText(desc[1], row[index]) for index, desc in enumerate(cur.description)}) for row in data]
+
 
 def getByNameOrCode(text, flagAdmin):
     text = text.replace('\'', '\'\'')
+
     def buildInteliSearch():
         searchQuery = ''
         searchedText = text.split()
@@ -48,7 +51,7 @@ def getByNameOrCode(text, flagAdmin):
             if((index + 1) < len(searchedText)):
                 searchQuery += " AND "
         return searchQuery
-    
+
     def getSearchColumns():
         if(text):
             try:
@@ -57,7 +60,7 @@ def getByNameOrCode(text, flagAdmin):
             except:
                 return f"AND ({ buildInteliSearch() })"
         return ""
-        
+
     query = f"""
     SELECT FIRST 50 PRODUTO.CODPROD, PRODUTO.CODIGO, PRODUTO.NOMEPROD, PRODUTO.UNIDADE, PRODUTO.DESCMAXIMO, PRODUTOESTOQUE.ESTATU, PRODUTOPRECO.PRECO 
     FROM PRODUTO

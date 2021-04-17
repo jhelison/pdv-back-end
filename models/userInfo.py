@@ -2,20 +2,21 @@ from datetime import datetime
 import datetime as dt
 from firebirdConnection import con
 
+
 def getDateRange(dataDate):
     def subtractMonth(date):
         try:
             return date.replace(day=1, month=date.month - 1)
         except:
             return date.replace(day=1, month=12, year=date.year - 1)
-        
+
     def addMonth(date):
         try:
             return date.replace(day=1, month=date.month + 1)
         except:
             return date.replace(day=1, month=1, year=date.year + 1)
-        
-    def setDayOfMonth(date, day, down = False):
+
+    def setDayOfMonth(date, day, down=False):
         day = day
         while True:
             try:
@@ -27,11 +28,12 @@ def getDateRange(dataDate):
                     return addMonth(date)
     day = dataDate.day
     now = datetime.now().date()
-    
+
     if day >= now.day:
         return setDayOfMonth(subtractMonth(now), day + 1, False), setDayOfMonth(now, day, True)
     else:
         return setDayOfMonth(now, day + 1, False), setDayOfMonth(addMonth(now), day, True)
+
 
 def getCount(user, startDate, endDate):
     query = f"""
@@ -40,7 +42,7 @@ def getCount(user, startDate, endDate):
     WHERE DATA >= '{startDate}' AND DATA <= '{endDate}' AND MOVENDA.CODVENDED = '{user.codvend}'
     """
     movenda = con.cursor().execute(query).fetchone()
-    
+
     query = f"""
     SELECT COUNT(MOVENDA.CODVENDED)
     FROM MOVENDADEVOLUCAO
@@ -49,8 +51,9 @@ def getCount(user, startDate, endDate):
     WHERE MOVENDADEVOLUCAO.DATA >= '{startDate}' AND MOVENDADEVOLUCAO.DATA <= '{endDate}' AND MOVENDA.CODVENDED = '{user.codvend}'
     """
     returns = con.cursor().execute(query).fetchone()
-    
+
     return movenda[0], returns[0]
+
 
 def getComission(user, startDate, endDate):
     query = f"""
@@ -61,9 +64,9 @@ def getComission(user, startDate, endDate):
     FROM MOVENDAPROD
     INNER JOIN MOVENDA ON MOVENDAPROD.CODMOVENDA = MOVENDA.CODMOVENDA AND DATA >= '{startDate}' AND DATA <= '{endDate}' AND MOVENDA.CODVENDED = '{user.codvend}'
     LEFT JOIN PRODUTO ON MOVENDAPROD.CODPROD = PRODUTO.CODPROD
-    """    
+    """
     sales = con.cursor().execute(query).fetchone()
-    
+
     query = f"""
     SELECT COALESCE(SUM(((MOVENDAPROD.VALORTOTAL / MOVENDAPROD.QUANTIDADE) * MOVENDADEVOLUCAO.QUANTIDADEDEVOLUCAO + (COALESCE((MOVENDA.VALORACRESCIMO / MOVENDA.VALORTOTALPRODUTOS),0) - COALESCE((MOVENDA.VALORDESCONTO / MOVENDA.VALORTOTALPRODUTOS),0) * MOVENDAPROD.VALORTOTAL)) * (PRODUTO.COMISSAO / 100)),0) AS FINALTOTAL,
     COALESCE(SUM((MOVENDAPROD.VALORTOTAL / MOVENDAPROD.QUANTIDADE) * MOVENDADEVOLUCAO.QUANTIDADEDEVOLUCAO),0) AS TOTALRETURNS,
@@ -91,32 +94,34 @@ def getComission(user, startDate, endDate):
         'finalComission': float(sales[0]) - float(returns[0])
     }
 
+
 def getComissionObjectDay(user, totalComission, startDate, endDate):
     workingHours = [8.5, 8.5, 8.5, 8.5, 8.5, 6.5, 0]
-    
+
     step = dt.timedelta(days=1)
-    
+
     totalComission = float(totalComission)
-    
+
     leftMonthHours = 0
     while startDate <= endDate:
         leftMonthHours += workingHours[startDate.weekday()]
         startDate += step
-                
+
     if user.comissionObjective:
-        objective = ((user.comissionObjective - totalComission) / leftMonthHours) * workingHours[datetime.now().weekday()]
+        objective = ((user.comissionObjective - totalComission) /
+                     leftMonthHours) * workingHours[datetime.now().weekday()]
         return objective
     else:
         return 0
-    
+
 
 def getUserInfo(user):
     now = datetime.now().date()
     startDate, endDate = getDateRange(user.startedDate)
-    
+
     daylyComission = getComission(user, now, now)
     monthComission = getComission(user, startDate, endDate)
-    
+
     daylySales, daylyReturns = getCount(user, now, now)
     monthSales, monthReturns = getCount(user, startDate, endDate)
 
@@ -155,5 +160,5 @@ def getUserInfo(user):
             'finalComission': ("%.2f" % monthComission['finalComission'])
         },
         'notice': "\"  \""
-    }    
+    }
     return data
