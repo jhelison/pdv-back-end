@@ -44,19 +44,19 @@ class UserModel(database.Model):
 
     def to_json(self):
         return {
-            "id" = self.id,
-            "profile_name" = self.profile_name,
-            "platform" = self.platform,
-            "phone_model" = self.phone_model,
-            "cod_vend" = self.cod_vend,
-            "nome_vend" = self.nome_vend,
-            "salary" = self.salary,
-            "comission_objective" = self.comission_objective,
-            "comission_multiplier" = self.comission_multiplier,
-            "max_discount" = self.max_discount,
-            "flag_see_all_budgets" = self.flag_see_all_budgets,
-            "flag_have_acess" = self.flag_have_acess,
-            "insert_date" = self.insert_date,
-            "admissional_date" = self.admissional_date,
-            "last_update" = self.last_update
+            "id": self.id,
+            "profile_name": self.profile_name,
+            "platform": self.platform,
+            "phone_model": self.phone_model,
+            "cod_vend": self.cod_vend,
+            "nome_vend": self.nome_vend,
+            "salary": self.salary,
+            "comission_objective": self.comission_objective,
+            "comission_multiplier": self.comission_multiplier,
+            "max_discount": self.max_discount,
+            "flag_see_all_budgets": self.flag_see_all_budgets,
+            "flag_have_acess": self.flag_have_acess,
+            "insert_date": self.insert_date,
+            "admissional_date": self.admissional_date,
+            "last_update": self.last_update
         }
