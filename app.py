@@ -43,7 +43,7 @@ api.add_resource(Budgets, '/budgets/')
 api.add_resource(Budget, '/budget')
 api.add_resource(OrcamentoProd, '/orcamentoprod/')
 api.add_resource(User, '/user/')
-api.add_resource(User, '/users')
+api.add_resource(Users, '/users')
 api.add_resource(UserInfo, '/userinfo')
 api.add_resource(Sellers, '/sellers')
 
