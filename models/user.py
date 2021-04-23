@@ -6,20 +6,21 @@ class UserModel(database.Model):
     __tablename__ = 'users'
 
     id = database.Column(database.String, primary_key=True)
-    profileName = database.Column(database.String(80), nullable=False)
+    profile_name = database.Column(database.String(80), nullable=False)
     platform = database.Column(database.String, nullable=False)
-    phoneModel = database.Column(database.String, nullable=False)
-    codVend = database.Column(database.String, nullable=False)
-    nomeVend = database.Column(database.String, nullable=False)
+    phone_model = database.Column(database.String, nullable=False)
+    cod_vend = database.Column(database.String, nullable=False)
+    nome_vend = database.Column(database.String, nullable=False)
     salary = database.Column(database.Float(precision=2))
-    comissionObjective = database.Column(database.Float(precision=2))
-    comissionMult = database.Column(database.Float(precision=1), default=1.0)
-    maxDiscount = database.Column(database.Float(precision=2))
-    flagSeeAllBudgets = database.Column(database.Boolean, default=False)
-    flagHaveAcess = database.Column(database.Boolean, default=False)
-    insertDate = database.Column(
+    comission_objective = database.Column(database.Float(precision=2))
+    comission_multiplier = database.Column(database.Float(precision=1), default=1.0)
+    max_discount = database.Column(database.Float(precision=2))
+    flag_see_all_budgets = database.Column(database.Boolean, default=False)
+    flag_have_acess = database.Column(database.Boolean, default=False)
+    insert_date = database.Column(
         database.DateTime, default=datetime.datetime.now())
-    admissionalDate = database.Column(database.Date)
+    admissional_date = database.Column(database.Date)
+    last_update = database.Column(database.Date)
 
     def __init__(self, userId, profileName, platform, phoneModel, codvend, nomeVend):
         self.userId = userId
