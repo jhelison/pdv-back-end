@@ -7,6 +7,15 @@ from models.user import UserModel
 from models.acess import AcessModel
 from models.userInfo import getUserInfo
 
+class Users(Resource):
+    def get(self):
+        try:
+            users = UserModel.query.all()
+        except Exception as e:
+            return {'message': 'Erro ao obter todos os usuarios', 'error': str(e)}, 500
+
+        return [user.to_json() for user in users]
+
 
 class User(Resource):
     args = reqparse.RequestParser()
