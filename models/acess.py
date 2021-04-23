@@ -8,7 +8,7 @@ class AcessModel(database.Model):
     
     id = database.Column(database.Integer, primary_key=True, autoincrement=True)
     date = database.Column(database.DateTime, default=datetime.datetime.now())
-    user_id = database.Column(database.String, database.ForeignKey('users.userId'))
+    user_id = database.Column(database.String, database.ForeignKey('users.id'))
     nome_vend = database.Column(database.String, nullable=False)
     table_changed = database.Column(database.String)
     type_of_change = database.Column(database.String)
