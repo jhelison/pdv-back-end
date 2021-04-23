@@ -5,20 +5,21 @@ import datetime
 class UserModel(database.Model):
     __tablename__ = 'users'
 
-    userId = database.Column(database.String, primary_key=True)
+    id = database.Column(database.String, primary_key=True)
     profileName = database.Column(database.String(80), nullable=False)
     platform = database.Column(database.String, nullable=False)
     phoneModel = database.Column(database.String, nullable=False)
-    codvend = database.Column(database.String, nullable=False)
+    codVend = database.Column(database.String, nullable=False)
     nomeVend = database.Column(database.String, nullable=False)
     salary = database.Column(database.Float(precision=2))
     comissionObjective = database.Column(database.Float(precision=2))
     comissionMult = database.Column(database.Float(precision=1), default=1.0)
-    flagAdmin = database.Column(database.Boolean, default=False)
+    maxDiscount = database.Column(database.Float(precision=2))
+    flagSeeAllBudgets = database.Column(database.Boolean, default=False)
     flagHaveAcess = database.Column(database.Boolean, default=False)
     insertDate = database.Column(
         database.DateTime, default=datetime.datetime.now())
-    startedDate = database.Column(database.Date)
+    admissionalDate = database.Column(database.Date)
 
     def __init__(self, userId, profileName, platform, phoneModel, codvend, nomeVend):
         self.userId = userId
