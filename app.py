@@ -9,7 +9,7 @@ from resources.products import Products
 from resources.customer import Customer, Customers
 from resources.orcamentoProd import OrcamentoProd
 from resources.budget import Budget, Budgets
-from resources.user import User, UserInfo
+from resources.user import User, UserInfo, Users
 from resources.sellers import Sellers
 
 app = Flask(__name__)
@@ -43,6 +43,7 @@ api.add_resource(Budgets, '/budgets/')
 api.add_resource(Budget, '/budget')
 api.add_resource(OrcamentoProd, '/orcamentoprod/')
 api.add_resource(User, '/user/')
+api.add_resource(User, '/users')
 api.add_resource(UserInfo, '/userinfo')
 api.add_resource(Sellers, '/sellers')
 
