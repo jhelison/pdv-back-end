@@ -9,6 +9,25 @@ from models.userInfo import getUserInfo
 
 class Users(Resource):
     def get(self):
+        """
+        Returns [{
+            "id": id,
+            "profile_name": profile_name,
+            "platform": platform,
+            "phone_model": phone_model,
+            "cod_vend": cod_vend,
+            "nome_vend": nome_vend,
+            "salary": salary,
+            "comission_objective": comission_objective,
+            "comission_multiplier": comission_multiplier,
+            "max_discount": max_discount,
+            "flag_see_all_budgets": flag_see_all_budgets,
+            "flag_have_acess": flag_have_acess,
+            "insert_date": insert_date,
+            "admissional_date": admissional_date,
+            "last_update": last_update
+        }, ...]
+        """
         try:
             users = UserModel.query.all()
         except Exception as e:
@@ -58,7 +77,6 @@ class User(Resource):
 
 
 class UserInfo(Resource):
-
     @jwt_required()
     def get(self):
         userId = get_jwt()['identity']['userId']
