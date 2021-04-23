@@ -65,6 +65,17 @@ class User(Resource):
         return acessToken, 200
 
     def put(self):
+        """
+        Recieve as
+	    "data": {
+            "id": ,
+            "profile_name": ,
+            "platform": ,
+            "phone_model": ,
+            "cod_vend": ,
+            "nome_vend": 
+	    }
+        """
         data = json.loads(User.args.parse_args().data)
 
         try:
@@ -74,6 +85,8 @@ class User(Resource):
 
         except Exception as e:
             return {'message': 'Erro ao pesquisar o cliente', 'error': str(e)}, 500
+
+        return newUser.to_json(), 201
 
 
 class UserInfo(Resource):
