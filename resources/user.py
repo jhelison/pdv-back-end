@@ -58,11 +58,11 @@ class User(Resource):
             return {'message': 'Acesso não autorizado'}, 401
 
         acessToken = create_access_token(identity={
-                                         'id': user.id, 'codvend': user.codvend, 'flagAdmin': user.flagAdmin}, expires_delta=datetime.timedelta(hours=9))
+                                         'user': user.to_json()}, expires_delta=datetime.timedelta(hours=9))
         
         return acessToken, 200
 
-    def put(self):
+    def post(self):
         """
         Recieve as
 	    "data": {
@@ -105,6 +105,28 @@ class User(Resource):
             return {'message': 'Erro ao pesquisar o usuario', 'error': str(e)}, 500
 
         return user.to_json(), 200
+
+    def put(self):
+        """
+        Recieves
+        "id": ...,
+        "data": {}
+        """
+        id = User.args.parse_args()['id']
+        data = json.loads(User.args.parse_args().data)
+
+        try:
+            user = UserModel.find_user(id)
+            if user:
+                user.update_user(data)
+            else:
+                return {'message': 'Usuario não encontrado'}, 404
+        except Exception as e:
+            return {'message': 'Erro ao pesquisar o cliente', 'error': str(e)}, 500
+        
+        return user.to_json(), 200
+
+
 
 
 

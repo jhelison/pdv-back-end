@@ -46,6 +46,11 @@ class UserModel(database.Model):
         database.session.delete(self)
         database.session.commit()
 
+    def update_user(self, data):
+        for key in data.keys():
+            setattr(self, key, data[key])
+        database.session.commit()
+
     def to_json(self):
         return {
             "id": self.id,
