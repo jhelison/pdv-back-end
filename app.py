@@ -1,6 +1,5 @@
 from flask import Flask, request
 from flask_restful import Api
-import random
 from flask_jwt_extended import JWTManager
 import os
 import sqlalchemy.sql.default_comparator
@@ -32,8 +31,10 @@ def buildDatabase():
 
 @app.route('/')
 def home():
-    ip_address = request.remote_addr
-    return f'<h1>Backend Running...{random.randint(1, 200)} {ip_address}:5000</h1>', 200
+    import socket   
+    hostname = socket.gethostname()   
+    IPAddr = socket.gethostbyname(hostname)  
+    return f'<div>Backend Running... {hostname} {IPAddr}:5000</div>', 200
 
 
 api.add_resource(Products, '/products/')

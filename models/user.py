@@ -21,7 +21,7 @@ class UserModel(database.Model):
     insert_date = database.Column(
         database.DateTime, default=datetime.datetime.now())
     admissional_date = database.Column(database.Date)
-    last_update = database.Column(database.Date)
+    last_update = database.Column(database.DateTime)
 
     def __init__(self, id, profile_name, platform, phone_model, cod_vend, nome_vend):
         self.id = id
@@ -42,6 +42,10 @@ class UserModel(database.Model):
         database.session.add(self)
         database.session.commit()
 
+    def delete_user(self):
+        database.session.delete(self)
+        database.session.commit()
+
     def to_json(self):
         return {
             "id": self.id,
@@ -56,7 +60,7 @@ class UserModel(database.Model):
             "max_discount": self.max_discount,
             "flag_see_all_budgets": self.flag_see_all_budgets,
             "flag_have_acess": self.flag_have_acess,
-            "insert_date": self.insert_date,
-            "admissional_date": self.admissional_date,
-            "last_update": self.last_update
+            "insert_date": str(self.insert_date),
+            "admissional_date": str(self.admissional_date),
+            "last_update": str(self.last_update)
         }

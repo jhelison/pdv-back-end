@@ -38,30 +38,28 @@ class Users(Resource):
 
 class User(Resource):
     args = reqparse.RequestParser()
-    args.add_argument('userId', type=str, required=False,
+    args.add_argument('id', type=str, required=False,
                       help="The field data cant be empty")
     args.add_argument('data', type=str, required=False,
                       help="The field data cant be empty")
 
     def get(self):
-        userId = User.args.parse_args()['userId']
+        id = User.args.parse_args()['id']
 
         try:
-            user = UserModel.findUser(userId)
-            if(user and user.flagHaveAcess):
-                acess = AcessModel(user.userId, 'userGET')
-                acess.saveAcess()
+            user = UserModel.find_user(id)
         except Exception as e:
             return {'message': 'Erro ao pesquisar o cliente', 'error': str(e)}, 500
 
         if(not user):
             return {'message': 'Usuario não encontrado'}, 404
 
-        if(not user.flagHaveAcess):
+        if(not user.flag_have_acess):
             return {'message': 'Acesso não autorizado'}, 401
 
         acessToken = create_access_token(identity={
-                                         'userId': user.userId, 'codvend': user.codvend, 'flagAdmin': user.flagAdmin}, expires_delta=datetime.timedelta(hours=9))
+                                         'id': user.id, 'codvend': user.codvend, 'flagAdmin': user.flagAdmin}, expires_delta=datetime.timedelta(hours=9))
+        
         return acessToken, 200
 
     def put(self):
@@ -79,14 +77,36 @@ class User(Resource):
         data = json.loads(User.args.parse_args().data)
 
         try:
-            if(not UserModel.findUser(data['userId'])):
+            if(not UserModel.find_user(data['id'])):
                 newUser = UserModel(**data)
-                newUser.saveUser()
+                newUser.save_user()
+            else:
+                return {'message': 'Usuario já existe'}, 400
 
         except Exception as e:
-            return {'message': 'Erro ao pesquisar o cliente', 'error': str(e)}, 500
+            return {'message': 'Erro ao pesquisar o usuario', 'error': str(e)}, 500
 
         return newUser.to_json(), 201
+    
+    def delete(self):
+        """
+        Recieves
+        "id": ...
+        """
+        id = User.args.parse_args()['id']
+
+        try:
+            user = UserModel.find_user(id)
+            if user:
+                user.delete_user()
+            else:
+                return {'message': 'Usuario não encontrado'}, 404
+        except Exception as e:
+            return {'message': 'Erro ao pesquisar o usuario', 'error': str(e)}, 500
+
+        return user.to_json(), 200
+
+
 
 
 class UserInfo(Resource):
