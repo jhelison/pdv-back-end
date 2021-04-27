@@ -1,4 +1,5 @@
 from flask_restful import Resource, reqparse
+from flask import request
 import json
 from flask_jwt_extended import create_access_token, jwt_required
 import datetime
@@ -37,14 +38,8 @@ class Users(Resource):
 
 
 class User(Resource):
-    args = reqparse.RequestParser()
-    args.add_argument('id', type=str, required=False,
-                      help="The field data cant be empty")
-    args.add_argument('data', type=str, required=False,
-                      help="The field data cant be empty")
-
     def get(self):
-        id = User.args.parse_args()['id']
+        id = request.get_json()["id"]
 
         try:
             user = UserModel.find_user(id)
@@ -65,7 +60,7 @@ class User(Resource):
     def post(self):
         """
         Recieve as
-	    "data": {
+	    "content": {
             "id": ,
             "profile_name": ,
             "platform": ,
@@ -74,11 +69,11 @@ class User(Resource):
             "nome_vend": 
 	    }
         """
-        data = json.loads(User.args.parse_args().data)
+        content = request.get_json()["content"]
 
         try:
-            if(not UserModel.find_user(data['id'])):
-                newUser = UserModel(**data)
+            if(not UserModel.find_user(content['id'])):
+                newUser = UserModel(**content)
                 newUser.save_user()
             else:
                 return {'message': 'Usuario já existe'}, 400
@@ -93,7 +88,7 @@ class User(Resource):
         Recieves
         "id": ...
         """
-        id = User.args.parse_args()['id']
+        id = request.get_json()["id"]
 
         try:
             user = UserModel.find_user(id)
@@ -110,15 +105,15 @@ class User(Resource):
         """
         Recieves
         "id": ...,
-        "data": {}
+        "content": {}
         """
-        id = User.args.parse_args()['id']
-        data = json.loads(User.args.parse_args().data)
+        id = request.get_json()["id"]
+        content = request.get_json()["content"]
 
         try:
             user = UserModel.find_user(id)
             if user:
-                user.update_user(data)
+                user.update_user(content)
             else:
                 return {'message': 'Usuario não encontrado'}, 404
         except Exception as e:
