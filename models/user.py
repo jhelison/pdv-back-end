@@ -18,8 +18,7 @@ class UserModel(database.Model):
     max_discount = database.Column(database.Float(precision=2))
     flag_see_all_budgets = database.Column(database.Boolean, default=False)
     flag_have_acess = database.Column(database.Boolean, default=False)
-    insert_date = database.Column(
-        database.DateTime, default=datetime.datetime.now())
+    insert_date = database.Column(database.DateTime)
     admissional_date = database.Column(database.Date)
     last_update = database.Column(database.DateTime)
 
@@ -30,6 +29,10 @@ class UserModel(database.Model):
         self.phone_model = phone_model
         self.cod_vend = cod_vend
         self.nome_vend = nome_vend
+
+        self.insert_date = datetime.datetime.now()
+
+
 
     @classmethod
     def find_user(cls, id):
