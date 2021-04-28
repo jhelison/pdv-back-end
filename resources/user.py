@@ -30,7 +30,7 @@ class Users(Resource):
         }, ...]
         """
         try:
-            users = UserModel.query.all()
+            users = UserModel.query.order_by(UserModel.insert_date.desc()).all()
         except Exception as e:
             return {'message': 'Erro ao obter todos os usuarios', 'error': str(e)}, 500
 
