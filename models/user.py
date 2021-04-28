@@ -65,7 +65,7 @@ class UserModel(database.Model):
             "max_discount": self.max_discount,
             "flag_see_all_budgets": self.flag_see_all_budgets,
             "flag_have_acess": self.flag_have_acess,
-            "insert_date": str(self.insert_date),
-            "admissional_date": str(self.admissional_date),
-            "last_update": str(self.last_update)
+            "insert_date": str(self.insert_date) if self.insert_date else "",
+            "admissional_date": str(self.admissional_date) if self.admissional_date else "",
+            "last_update": str(self.last_update) if self.last_update else ""
         }
