@@ -31,7 +31,7 @@ def buildDatabase():
 
 @app.route('/')
 def home():
-    import socket   
+    import socket
     hostname = socket.gethostname()   
     IPAddr = socket.gethostbyname(hostname)  
     return f'<div>Backend Running... {hostname} {IPAddr}:5000</div>', 200
