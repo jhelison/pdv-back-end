@@ -31,6 +31,7 @@ class UserModel(database.Model):
         self.nome_vend = nome_vend
 
         self.insert_date = datetime.datetime.now()
+        self.last_update = datetime.datetime.now()
 
 
 
@@ -51,6 +52,18 @@ class UserModel(database.Model):
 
     def update_user(self, data):
         for key in data.keys():
+            if key == "insert_date":
+                self.insert_date = datetime.datetime.strptime(data[key], "%Y-%m-%d %H:%M:%S.%f")
+                continue
+            if key == "admissional_date":
+                self.admissional_date = datetime.datetime.strptime(data[key].split("T")[0], "%Y-%m-%d")
+                continue
+            if key == "last_update":
+                self.last_update = datetime.datetime.now()
+                continue
+            if not data[key]:
+                continue
+
             setattr(self, key, data[key])
         database.session.commit()
 

@@ -110,6 +110,9 @@ class User(Resource):
         id = request.get_json()["id"]
         content = request.get_json()["content"]
 
+        print(id)
+        print(content)
+
         try:
             user = UserModel.find_user(id)
             if user:
@@ -117,6 +120,7 @@ class User(Resource):
             else:
                 return {'message': 'Usuario não encontrado'}, 404
         except Exception as e:
+            print(e)
             return {'message': 'Erro ao pesquisar o cliente', 'error': str(e)}, 500
         
         return user.to_json(), 200
