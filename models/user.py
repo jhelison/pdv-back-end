@@ -61,8 +61,6 @@ class UserModel(database.Model):
             if key == "last_update":
                 self.last_update = datetime.datetime.now()
                 continue
-            if data[key] == None:
-                continue
 
             setattr(self, key, data[key])
         database.session.commit()
