@@ -20,7 +20,5 @@ class Dashboard(Resource):
                 "hostname": hostname,
                 "IPAddr": IPAddr + ":5000"
             },
-            "data":{
-                "users_count": users_count
-            }
+            "users_count": users_count
         }, 200
