@@ -33,14 +33,16 @@ class UserModel(database.Model):
         self.insert_date = datetime.datetime.now()
         self.last_update = datetime.datetime.now()
 
-
-
     @classmethod
     def find_user(cls, id):
         user = cls.query.filter_by(id=id).first()
         if user:
             return user
         return None
+
+    @classmethod
+    def count_users(cls):
+        return cls.query.count()
 
     def save_user(self):
         database.session.add(self)

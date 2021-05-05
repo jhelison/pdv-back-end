@@ -18,6 +18,7 @@ db_path = os.path.join(os.getenv('APPDATA'), 'CPlusAPP/')
 db_uri = 'sqlite:///{}'.format(os.path.join(db_path, 'app.db'))
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ECHO'] = True
 app.config['JWT_SECRET_KEY'] = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MTExNzk0ODAsIm5iZiI6MTYxMTE3OTQ4MCwianRpIjoiZGYyOWU4ZTQtZWYzMS00Yjc3LWI4MjMtMTgyMWJlOWFlZjM3IiwiZXhwIjoxNjExMTgwMzgwLCJpZGVudGl0eSI6IjkxNGU5ZTUzNzcyMzBmYjciLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.kNwqEZCMYVVh_6tjcboDShpa7Ih9BjZ40FuCk4WZowk'
 api = Api(app)
 jwt = JWTManager(app)
@@ -32,9 +33,6 @@ def buildDatabase():
 
 @app.route('/')
 def home():
-    import socket
-    hostname = socket.gethostname()   
-    IPAddr = socket.gethostbyname(hostname)  
     return f'<h1>Backend Running...</h1>', 200
 
 
