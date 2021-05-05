@@ -10,6 +10,7 @@ from resources.orcamentoProd import OrcamentoProd
 from resources.budget import Budget, Budgets
 from resources.user import User, UserInfo, Users
 from resources.sellers import Sellers
+from resources.dashboard import Dashboard
 
 app = Flask(__name__)
 # Database is installed on appdata/user/roaming
@@ -34,7 +35,7 @@ def home():
     import socket
     hostname = socket.gethostname()   
     IPAddr = socket.gethostbyname(hostname)  
-    return f'<div>Backend Running... {hostname} {IPAddr}:5000</div>', 200
+    return f'<h1>Backend Running...</h1>', 200
 
 
 api.add_resource(Products, '/products/')
@@ -47,8 +48,9 @@ api.add_resource(User, '/user/')
 api.add_resource(Users, '/users')
 api.add_resource(UserInfo, '/userinfo')
 api.add_resource(Sellers, '/sellers')
+api.add_resource(Dashboard, '/dashboard')
 
 if __name__ == '__main__':
     from sql_alchemy import database
     database.init_app(app)
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, threaded=True)
