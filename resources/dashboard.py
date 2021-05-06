@@ -21,5 +21,5 @@ class Dashboard(Resource):
                 "IPAddr": IPAddr + ":5000"
             },
             "users_count": users_count,
-            "active_users": 0
+            "users_active": 0
         }, 200
