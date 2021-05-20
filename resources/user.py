@@ -38,7 +38,12 @@ class Users(Resource):
 
 
 class User(Resource):
-    def get(self, id=None):
+    args = reqparse.RequestParser()
+    args.add_argument('id')
+
+    def get(self):
+        id = User.args.parse_args()['id']
+
         try:
             user = UserModel.find_user(id)
         except Exception as e:
@@ -55,7 +60,7 @@ class User(Resource):
         
         return acessToken, 200
 
-    def post(self, id=None):
+    def post(self):
         """
         Recieve as
 	    "content": {
@@ -81,7 +86,7 @@ class User(Resource):
 
         return newUser.to_json(), 201
     
-    def delete(self, id=None):
+    def delete(self):
         """
         Recieves
         "id": ...
@@ -99,7 +104,7 @@ class User(Resource):
 
         return user.to_json(), 200
 
-    def put(self, id=None):
+    def put(self):
         """
         Recieves
         "id": ...,
