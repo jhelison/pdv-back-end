@@ -38,9 +38,7 @@ class Users(Resource):
 
 
 class User(Resource):
-    def get(self):
-        id = request.get_json()["id"]
-
+    def get(self, id=None):
         try:
             user = UserModel.find_user(id)
         except Exception as e:
@@ -57,7 +55,7 @@ class User(Resource):
         
         return acessToken, 200
 
-    def post(self):
+    def post(self, id=None):
         """
         Recieve as
 	    "content": {
@@ -83,7 +81,7 @@ class User(Resource):
 
         return newUser.to_json(), 201
     
-    def delete(self):
+    def delete(self, id=None):
         """
         Recieves
         "id": ...
@@ -101,7 +99,7 @@ class User(Resource):
 
         return user.to_json(), 200
 
-    def put(self):
+    def put(self, id=None):
         """
         Recieves
         "id": ...,
