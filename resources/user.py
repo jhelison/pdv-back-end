@@ -52,13 +52,12 @@ class User(Resource):
         if(not user):
             return {'message': 'Usuario não encontrado'}, 404
 
-        if(not user.flag_have_acess):
-            return {'message': 'Acesso não autorizado'}, 401
-
-        acessToken = create_access_token(identity={
-                                         'user': user.to_json()}, expires_delta=datetime.timedelta(hours=9))
+        acessToken = None
+        if user.flag_have_acess:
+            acessToken = create_access_token(identity={
+                                            'user': user.to_json()}, expires_delta=datetime.timedelta(hours=9))
         
-        return acessToken, 200
+        return {"flag_have_acess": user.flag_have_acess, "acessToken": acessToken}, 200
 
     def post(self):
         """
