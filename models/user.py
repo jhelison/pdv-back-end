@@ -17,7 +17,7 @@ class UserModel(database.Model):
         database.Float(precision=1), default=1.0)
     max_discount = database.Column(database.Float(precision=2))
     flag_see_all_budgets = database.Column(database.Boolean, default=False)
-    flag_have_acess = database.Column(database.Boolean, default=False)
+    flag_have_acess = database.Column(database.Boolean)
     insert_date = database.Column(database.DateTime)
     admissional_date = database.Column(database.Date)
     last_update = database.Column(database.DateTime)
