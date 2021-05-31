@@ -16,8 +16,8 @@ class Dashboard(Resource):
             print(e)
 
         return {
-            "host": {
-                "hostname": hostname,
+            "server_data": {
+                "port": "5151",
                 "IPAddr": IPAddr + ":5000"
             },
             "users_count": users_count,
