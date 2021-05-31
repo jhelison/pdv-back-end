@@ -18,7 +18,7 @@ class Dashboard(Resource):
         return {
             "server_data": {
                 "port": "5151",
-                "IPAddr": IPAddr + ":5000"
+                "acess_code": 20218759
             },
             "users_count": users_count,
             "users_active": 0
