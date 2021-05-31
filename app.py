@@ -51,4 +51,4 @@ api.add_resource(Dashboard, '/dashboard')
 if __name__ == '__main__':
     from sql_alchemy import database
     database.init_app(app)
-    app.run(host='0.0.0.0', port=5000, threaded=True)
+    app.run(host='0.0.0.0', port=5051, threaded=True)
