@@ -18,6 +18,7 @@ def fetchall_as_dict(query: str, params: array = [], one_key: bool = False) -> d
     coumns_names = [row[0] for row in cur.description]
 
     data = cur.fetchall()
+    cur.close()
 
     if one_key:
         data_dict = defaultdict(list)
@@ -35,6 +36,7 @@ def fetchone_as_dict(query: str, params: array = []) -> dict:
     coumns_names = [row[0] for row in cur.description]
 
     data = cur.fetchone()
+    cur.close()
 
     return {coumns_names[idx]:data[idx] for idx in range(len(data))}
 
