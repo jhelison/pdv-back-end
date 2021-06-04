@@ -1,4 +1,4 @@
-from firebirdConnection import con
+from FDBHandler import con
 
 fixedData = {
     "BASEICMS": 0.0000,

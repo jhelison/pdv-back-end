@@ -1,4 +1,4 @@
-from firebirdConnection import con
+from FDBHandler import con
 
 
 def queryToDict(sqlQuery):
