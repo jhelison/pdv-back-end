@@ -17,20 +17,7 @@ class UserInfo:
         get_month_range(date(2021, 3, 31)) returns (date(2021, 3, 1), date(2021, 3, 31))
         get_month_range(date(2021, 3, 1)) returns (date(2021, 2, 2), date(2021, 3, 1)))
         """
-        if this_month:
-            if input_date.day < date.today().day:
-                try:
-                    input_date.replace(month=input_date.month + 1)
-                except:
-                    input_date.replace(month=1, year=input_date.year + 1)
-            
-            # else
 
-
-            # try:
-            #     input_date = date.today().replace(day=input_date.day)
-            # except:
-            #     input_date = date
         def secure_replace_date(d : date, year=None, month=None, day=None):
             new_date = d
             if year:
@@ -45,7 +32,7 @@ class UserInfo:
                     new_date = new_date.replace(day=day)
                 except:
                     new_date = next_month(new_date)
-
+            return new_date
 
         def last_month(d):
             #Try to set last month on day 1. If not possible (<1) return last month on last year.
@@ -61,15 +48,29 @@ class UserInfo:
             except:
                 return d.replace(day=1, month=1, year=d.year + 1)
 
-        def set_day_month(d, day):
-            #Try to set the day of the month, if impossible (>31) set to next month.
-            try:
-                return d.replace(day=day)
-            except:
-                return next_month(d)
+
+        if this_month:
+            if input_date.day < date.today().day:
+                input_date = secure_replace_date(input_date, month=date.today().month + 1)
+            else:
+                input_date = secure_replace_date(input_date, month=date.today().month  + 1)
+                # try:
+                #     input_date.replace(month=input_date.month + 1)
+                # except:
+                #     input_date.replace(month=1, year=input_date.year + 1)
+            
+            # else
+
+
+            # try:
+            #     input_date = date.today().replace(day=input_date.day)
+            # except:
+            #     input_date = date
+            
+
         
-        first_date = set_day_month(last_month(input_date), input_date.day + 1)
-        last_date = set_day_month(input_date, input_date.day)
+        first_date = secure_replace_date(last_month(input_date), day=input_date.day + 1)
+        last_date = secure_replace_date(input_date, day=input_date.day)
 
         return first_date, last_date
 
