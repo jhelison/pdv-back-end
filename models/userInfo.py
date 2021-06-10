@@ -3,37 +3,37 @@ import datetime as dt
 from FDBHandler import con
 
 
-def getDateRange(dataDate):
-    def subtractMonth(date):
-        try:
-            return date.replace(day=1, month=date.month - 1)
-        except:
-            return date.replace(day=1, month=12, year=date.year - 1)
+# def getDateRange(dataDate):
+#     def subtractMonth(date):
+#         try:
+#             return date.replace(day=1, month=date.month - 1)
+#         except:
+#             return date.replace(day=1, month=12, year=date.year - 1)
 
-    def addMonth(date):
-        try:
-            return date.replace(day=1, month=date.month + 1)
-        except:
-            return date.replace(day=1, month=1, year=date.year + 1)
+#     def addMonth(date):
+#         try:
+#             return date.replace(day=1, month=date.month + 1)
+#         except:
+#             return date.replace(day=1, month=1, year=date.year + 1)
 
-    def setDayOfMonth(date, day, down=False):
-        day = day
-        while True:
-            try:
-                return date.replace(day=day)
-            except:
-                if(down):
-                    day -= 1
-                else:
-                    return addMonth(date)
+#     def setDayOfMonth(date, day, down=False):
+#         day = day
+#         while True:
+#             try:
+#                 return date.replace(day=day)
+#             except:
+#                 if(down):
+#                     day -= 1
+#                 else:
+#                     return addMonth(date)
                     
-    day = dataDate.day
-    now = datetime.now().date()
+#     day = dataDate.day
+#     now = datetime.now().date()
 
-    if day >= now.day:
-        return setDayOfMonth(subtractMonth(now), day + 1, False), setDayOfMonth(now, day, True)
-    else:
-        return setDayOfMonth(now, day + 1, False), setDayOfMonth(addMonth(now), day, True)
+#     if day >= now.day:
+#         return setDayOfMonth(subtractMonth(now), day + 1, False), setDayOfMonth(now, day, True)
+#     else:
+#         return setDayOfMonth(now, day + 1, False), setDayOfMonth(addMonth(now), day, True)
 
 
 def getCount(user, startDate, endDate):

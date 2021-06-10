@@ -5,18 +5,22 @@ import fdb
 from decimal import Decimal
 import datetime
 
+from sqlalchemy.orm import query
+
 PATH = r'C:\Users\jheli\Documents\programming-projects\PDV\temp\CPLUS.FDB'
 
-class FDBHandler:
+class Singleton(type):
+    _instances: dict = {}
+
+    def __call__(cls, *args, **kwds) -> None:
+        if cls not in cls._instances:
+            cls._instances[cls] = super().__call__(*args, **kwds)
+        return cls._instances[cls]
+
+class FDBHandler(metaclass=Singleton):
     """
     Build a new connection to the database
     """
-    def __new__(cls):
-        if not hasattr(cls, '_exists'):
-            cls._exists = super().__new__(cls)
-
-        return cls._exists
-
     def __init__(self) -> None:
         self.con = fdb.connect(PATH, 'SYSDBA', 'masterkey')
 

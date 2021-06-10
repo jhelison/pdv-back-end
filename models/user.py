@@ -33,17 +33,6 @@ class UserModel(database.Model):
         self.insert_date = datetime.datetime.now()
         self.last_update = datetime.datetime.now()
 
-    @classmethod
-    def find_user(cls, id):
-        user = cls.query.filter_by(id=id).first()
-        if user:
-            return user
-        return None
-
-    @classmethod
-    def count_users(cls):
-        return cls.query.count()
-
     def save_user(self):
         database.session.add(self)
         database.session.commit()
@@ -85,3 +74,14 @@ class UserModel(database.Model):
             "admissional_date": str(self.admissional_date) if self.admissional_date else "",
             "last_update": str(self.last_update) if self.last_update else ""
         }
+
+    @classmethod
+    def find_user(cls, id):
+        user = cls.query.filter_by(id=id).first()
+        if user:
+            return user
+        return None
+
+    @classmethod
+    def count_users(cls):
+        return cls.query.count()
