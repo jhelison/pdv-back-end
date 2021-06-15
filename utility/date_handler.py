@@ -159,6 +159,16 @@ class DateHandler:
     def get_last_day_month(year: int, month: int) -> int:
         return calendar.monthrange(year, month)[1]
 
+    @staticmethod
+    def get_first_last_date_for_month(month: int, year: int = None) -> Tuple[date, date]:
+        if month < 1 or month > 12:
+            raise ValueError("The month have to be between 1 and 12")
+        
+        if not year:
+            year = date.today().year
+            
+        return date(year, month, 1), date(year, month, DateHandler.get_last_day_month(year, month))
+
     def _calculate_first_date(self, input_date: date) -> date:
         first_date = DateHandler(input_date)
         first_date.set_month(input_date.month - 1)

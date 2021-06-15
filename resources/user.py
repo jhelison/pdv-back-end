@@ -1,12 +1,12 @@
 from flask_restful import Resource, reqparse
 from flask import request
-import json
+from datetime import date
 from flask_jwt_extended import create_access_token, jwt_required
 import datetime
 
 from models.user import UserModel
 from models.acess import AcessModel
-from models.userInfo import getUserInfo
+from models.userInfo2 import UserInfo as ui
 
 class Users(Resource):
     def get(self):
@@ -54,10 +54,11 @@ class User(Resource):
 
         acessToken = None
         if user.flag_have_acess:
+            
             acessToken = create_access_token(identity={
-                                            'user': user.to_json()}, expires_delta=datetime.timedelta(hours=9))
+                                            'user': user.id}, expires_delta=datetime.timedelta(hours=9))
         
-        return {"flag_have_acess": user.flag_have_acess, "acessToken": acessToken}, 200
+        return {"flag_have_acess": user.flag_have_acess, "acessToken": acessToken, "user": user.to_json()}, 200
 
     def post(self):
         """
@@ -127,21 +128,29 @@ class User(Resource):
         
         return user.to_json(), 200
 
-
-
-
-
-
 class UserInfo(Resource):
-    @jwt_required()
+    # @jwt_required()
     def get(self):
-        userId = get_jwt()['identity']['userId']
+        # userId = get_jwt()['identity']['userId']
 
-        user = UserModel.findUser(userId)
+        # user = UserModel.findUser('userId')
+        user = UserModel.find_user('914e9e5377230fb7')
+        
+        user_info = ui(user)
+        # start_date, end_date = date(2021, 1, 1), date(2021, 1, 31)
+        
+        print(user_info.as_json())
+        
+        
+        # print(user_info.sales_count(start_date, end_date))
+        # print(user_info.devolution_count(start_date, end_date))
+        
+        # print(user_info.sales_comission(start_date, end_date))
+        # print(user_info.devolution_comission(start_date, end_date))
 
-        try:
-            data = getUserInfo(user)
-        except Exception as e:
-            return {'message': 'Erro ao carregar informações', 'error': str(e)}, 500
+        # try:
+        #     data = getUserInfo(user)
+        # except Exception as e:
+        #     return {'message': 'Erro ao carregar informações', 'error': str(e)}, 500
 
-        return data, 200
+        # return data, 200

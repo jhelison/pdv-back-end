@@ -9,6 +9,8 @@ from sqlalchemy.orm import query
 
 PATH = r'C:\Users\jheli\Documents\programming-projects\PDV\temp\CPLUS.FDB'
 
+con = None
+
 class Singleton(type):
     _instances: dict = {}
 
@@ -29,7 +31,8 @@ class FDBHandler(metaclass=Singleton):
         Accepts query and params and fetch all the rows returning a dict with the data.
         one_key groups all the keys into arrays.
         """
-        cur = self.con.cursor().execute(query, params)
+        cur = self.con.cursor()
+        cur.execute(query, params)
         coumns_names = [row[0] for row in cur.description]
 
         data = cur.fetchall()
@@ -47,7 +50,8 @@ class FDBHandler(metaclass=Singleton):
         """
         Accepts query and params and fetch one row returning a dict with the data.
         """
-        cur = self.con.cursor().execute(query, params)
+        cur = self.con.cursor()
+        cur.execute(query, params)
         coumns_names = [row[0] for row in cur.description]
 
         data = cur.fetchone()
@@ -55,7 +59,8 @@ class FDBHandler(metaclass=Singleton):
 
         return {coumns_names[idx]:data[idx] for idx in range(len(data))}
 
-    def convert_to_JSON(data: dict) -> dict:
+    @classmethod
+    def convert_to_JSON(cls, data: dict) -> dict:
         """
         Convert dict to a array parsing the data.
         Accepts arrays of dicts or dict as input.

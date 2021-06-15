@@ -1,5 +1,8 @@
-from FDBHandler import con
+from utility.FDB_handler import FDBHandler
 
+class Product:
+    def __init__(self):
+        pass
 
 def queryToDict(sqlQuery, flagAdmin):
     def convertToText(typeClass, num):
