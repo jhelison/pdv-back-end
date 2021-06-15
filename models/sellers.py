@@ -52,5 +52,3 @@ class Seller:
         res = FDBHandler().fetchone_as_dict(query, params)
         
         return Seller(**res)
-
-print([seller.json() for seller in Seller.all()])
