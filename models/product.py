@@ -42,7 +42,7 @@ class Product(FDBModel):
                  UNIDADE: str,
                  DESCMAXIMO: int,
                  FLAGINATIVO: Union[str, bool]
-                 ):
+                 ) -> None:
         self.CODPROD = CODPROD
         self.CODIGO = CODIGO
         self.NOMEPROD = NOMEPROD
@@ -55,7 +55,7 @@ class Product(FDBModel):
         else:
             self.FLAGINATIVO = FLAGINATIVO
             
-    def json(self):
+    def json(self) -> str:
         stock = self.get_stock()
         price = self.get_price()
         
@@ -104,7 +104,7 @@ class ProductPrice(FDBModel):
     CODPRECO = Column()
     PRECO = Column()
     
-    def __init__(self, CODPRODUTOPRECO, CODPROD, CODPRECO, PRECO):
+    def __init__(self, CODPRODUTOPRECO, CODPROD, CODPRECO, PRECO) -> None:
         self.CODPRODUTOPRECO = CODPRODUTOPRECO
         self.CODPROD = CODPROD
         self.CODPRECO = CODPRECO
