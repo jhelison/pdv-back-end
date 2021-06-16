@@ -4,27 +4,6 @@ from typing import Union
 sys.path.insert(0, './')
 from utility.FDB_handler import FDBModel, Column
 
-# QUERY = """
-#         SELECT 
-#             PRODUTO.CODPROD, 
-#             PRODUTO.CODIGO, 
-#             PRODUTO.NOMEPROD, 
-#             PRODUTO.UNIDADE, 
-#             PRODUTO.DESCMAXIMO, 
-#             PRODUTOESTOQUE.ESTATU, 
-#             PRODUTOPRECO.PRECO,
-#             PRODUTO.FLAGINATIVO
-#         FROM 
-#             PRODUTO
-#         LEFT JOIN 
-#             PRODUTOESTOQUE ON 
-#                 PRODUTO.CODPROD = PRODUTOESTOQUE.CODPROD
-#         LEFT JOIN 
-#             PRODUTOPRECO ON 
-#                 PRODUTO.CODPROD = PRODUTOPRECO.CODPROD
-#         WHERE PRODUTOESTOQUE.CODEMPRESA = 1
-#         AND PRODUTOPRECO.CODPRECO = '000000001'"""
-
 class Product(FDBModel):
     __tablename__ = "PRODUTO"
     
