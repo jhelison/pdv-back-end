@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import List
 
-from FDBHandler import FDBHandler
+from utility.FDB_handler import FDBHandler
 from datetime import date, datetime, timedelta
 
 from models.user import UserModel
