@@ -129,7 +129,7 @@ class FDBModel:
         return [key for key, value in cls.__dict__.items() if isinstance(value, Column)]
 
     @staticmethod
-    def convert_to_JSON(data: dict) -> dict:
+    def convert_to_JSON(data: dict) -> str:
         """
         Convert dict to a array parsing the data.
         Accepts arrays of dicts or dict as input.
