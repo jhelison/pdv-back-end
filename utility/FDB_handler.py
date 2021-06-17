@@ -91,6 +91,7 @@ class FDBModel:
 
     @classmethod
     def find_by_columns(cls: Type[T], exact: bool = True, **kwargs) -> List[T]:
+        #teste
         if kwargs:
             columns = cls._get_columns()
 
@@ -110,6 +111,31 @@ class FDBModel:
             return [cls(**row) for row in res]
         else:
             return None
+        
+    def update(self) -> None:
+        
+        required_columns = self.__dict__
+        # primary_key = cls._get_primary_key()
+
+        # if not primary_key:
+        #     error = f"Primary key is missing for the class {cls.__class__.__name__}"
+        #     raise TypeError(error)
+        
+        # query = """
+        # UPDATE
+        #     {}
+        # SET
+        #     {}
+        # WHERE
+        #     {} = {}
+        # """.format(cls.__tablename__,
+        #            "",
+        #            primary_key[0],
+        #            cls.__)
+        
+        
+        
+        
 
     @classmethod
     def _basic_query(cls) -> str:

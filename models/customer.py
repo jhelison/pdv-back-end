@@ -92,8 +92,14 @@ class Customer(FDBModel):
             'COMPLEMENTOLOGRADOURO': self.COMPLEMENTOLOGRADOURO
         })
 
-customer = Customer.find_by_key('00016226')
-print(type(customer.json()))
+# customer = Customer.find_by_key('00016226')
+# print(type(customer.json()))
+# customer.update()
+# customers = Customer.find_by_columns(exact = False, NOMECLI = "ana")
+
+
+# [print(customer.json()) for customer in customers]
+# print("Quantidade", len(customers))
    
 # import datetime
 
