@@ -75,10 +75,18 @@ class FDBHandler(metaclass=Singleton):
 
 class FDBModel:
     __tablename__ = None
+    __base_limit = 50
 
     @classmethod
-    def all(cls: Type[T]) -> List[T]:
-        query = cls._basic_query()
+    def all(cls: Type[T], page = None, limit = None) -> List[T]:
+        """
+        Return objects for all rows in the table
+        
+        It accepts page and limit as parameters.
+        If limit is not provided it uses the base limit of 50.
+        """
+        
+        query = cls._basic_query(page, limit)
 
         res = FDBHandler().fetchall_as_dict(query)
 
@@ -86,6 +94,10 @@ class FDBModel:
 
     @classmethod
     def find_by_key(cls: Type[T], key_value: Union[str, int]) -> T:
+        """
+        Return one object for the finded row. The key value must be provided
+        """
+        
         primary_key = cls._get_primary_key()
 
         if not primary_key:
@@ -100,7 +112,16 @@ class FDBModel:
         return cls(**res)
 
     @classmethod
-    def find_by_columns(cls: Type[T], exact: bool = True, **kwargs) -> List[T]:
+    def find_by_columns(cls: Type[T], page = None, limit = None, exact: bool = True, **kwargs) -> List[T]:
+        """
+        Finds and return objects rows in the table.
+        
+        The searched must be provided as params.
+        
+        It accepts page and limit as parameters.
+        If limit is not provided it uses the base limit of 50.
+        Exact also can be providade if the query have to use exact values for strings or no.
+        """
         # teste
         if kwargs:
             columns = cls._get_columns()
@@ -114,7 +135,7 @@ class FDBModel:
                     wheres.append(q)
                     params += p
 
-            query = cls._basic_query()
+            query = cls._basic_query(page, limit)
             query += "WHERE " + " AND ".join(wheres)
 
             res = FDBHandler().fetchall_as_dict(query, params)
@@ -123,6 +144,12 @@ class FDBModel:
             return None
 
     def update(self) -> None:
+        """
+        Updates the database with the object.
+        
+        It don't commit the database. It must be done by hand.
+        """
+        
         if '_on_update' in self.__class__.__dict__:
             self._on_update()
 
@@ -156,6 +183,12 @@ class FDBModel:
         FDBHandler().execute_query(query, params)
 
     def insert(self) -> None:
+        """
+        Insert a new row to the database.
+        
+        It don't commit the database. It must be done by hand.
+        """
+        
         if '_on_insert' in self.__class__.__dict__:
             self._on_insert()
         
@@ -193,13 +226,25 @@ class FDBModel:
                     
 
     @classmethod
-    def _basic_query(cls) -> str:
+    def _basic_query(cls, page: int = None, limit: int = None) -> str:
         return """
-        SELECT
+        SELECT {}
             {}
         FROM
             {}
-        """.format(", ".join([column for column in cls._get_columns()]), cls.__tablename__)
+        """.format(cls._build_pagination_query(page, limit), ", ".join([column for column in cls._get_columns()]), cls.__tablename__)
+        
+    @classmethod
+    def _build_pagination_query(cls, page: int, limit: int = None) -> str:
+        if page:
+            if page < 1:
+                return ""
+            
+            if not limit:
+                limit = cls.__base_limit
+            return f"first {limit} skip {limit * (page - 1)}"
+        return ""
+        
 
     @classmethod
     def _get_primary_key(cls) -> str:
