@@ -1,5 +1,5 @@
 
-from datetime import datetime
+from datetime import datetime, date
 import sys
 
 sys.path.insert(0, './')
@@ -95,3 +95,8 @@ class Customer(FDBModel):
     
     def _on_update(self) -> None:
         self.LAST_CHANGE = datetime.now()
+        
+    def _on_insert(self) -> None:
+        self.DATCAD = date.today()
+        self.LAST_CHANGE = datetime.now()
+        
