@@ -156,6 +156,9 @@ class FDBModel:
         FDBHandler().execute_query(query, params)
 
     def insert(self) -> None:
+        if '_on_insert' in self.__class__.__dict__:
+            self._on_insert()
+        
         for key, value in list(self._get_next_keys().items()):
             self.__dict__[key] = value
                     
