@@ -4,13 +4,15 @@ import json
 from typing import List, Tuple, Union, Type, TypeVar
 import fdb
 from decimal import Decimal
-import datetime
+from datetime import datetime
+
 
 PATH = r'C:\Users\jheli\Documents\programming-projects\PDV\temp\CPLUS.FDB'
 
 con = None
 
 T = TypeVar('T', bound='TrivialClass')
+
 
 class Singleton(type):
     _instances: dict = {}
@@ -62,6 +64,14 @@ class FDBHandler(metaclass=Singleton):
 
         return {coumns_names[idx]: data[idx] for idx in range(len(data))}
 
+    def execute_query(self, query: str, params: list = []) -> None:
+        cur = self.con.cursor()
+        cur.execute(query, params)
+        cur.close()
+
+    def commit(self) -> None:
+        self.con.commit()
+
 
 class FDBModel:
     __tablename__ = None
@@ -91,7 +101,7 @@ class FDBModel:
 
     @classmethod
     def find_by_columns(cls: Type[T], exact: bool = True, **kwargs) -> List[T]:
-        #teste
+        # teste
         if kwargs:
             columns = cls._get_columns()
 
@@ -106,36 +116,78 @@ class FDBModel:
 
             query = cls._basic_query()
             query += "WHERE " + " AND ".join(wheres)
-            
+
             res = FDBHandler().fetchall_as_dict(query, params)
             return [cls(**row) for row in res]
         else:
             return None
-        
-    def update(self) -> None:
-        
-        required_columns = self.__dict__
-        # primary_key = cls._get_primary_key()
 
-        # if not primary_key:
-        #     error = f"Primary key is missing for the class {cls.__class__.__name__}"
-        #     raise TypeError(error)
+    def update(self) -> None:
+        if '_on_update' in self.__class__.__dict__:
+            self._on_update()
+
+        data = self.__dict__.copy()
+        primary_key = self._get_primary_key()
+
+        if not primary_key:
+            error = f"Primary key is missing for the class {self.__class__.__name__}"
+            raise TypeError(error)
+
+        for key in primary_key:
+            del data[key]        
+
+        set_query = [f"{key} = ?" for key in data.keys()]
+        params = list(data.values())
+
+        query = """
+        UPDATE
+            {}
+        SET
+            {}
+        WHERE
+            {}
+        """.format(self.__tablename__,
+                   ", ".join(set_query),
+                   ' AND '.join([key + " = ?" for key in primary_key]))
         
-        # query = """
-        # UPDATE
-        #     {}
-        # SET
-        #     {}
-        # WHERE
-        #     {} = {}
-        # """.format(cls.__tablename__,
-        #            "",
-        #            primary_key[0],
-        #            cls.__)
+        for key in primary_key:
+            params.append(self.__dict__[key])
+
+        FDBHandler().execute_query(query, params)
+
+    def insert(self) -> None:
+        for key, value in list(self._get_next_keys().items()):
+            self.__dict__[key] = value
+                    
+        query = """
+        INSERT INTO
+            {} ({})
+        VALUES
+            ({})
+        """.format(self.__tablename__,
+                   ", ".join([key for key, value in self.__dict__.items() if value != None]),
+                   ", ".join(["?" for _, value in self.__dict__.items() if value != None]))
         
+        FDBHandler().execute_query(query, [value for _, value in self.__dict__.items() if value != None])
+
+    @classmethod
+    def _get_next_keys(cls) -> dict:
+        key_columns = cls._get_primary_key()
         
+        res = {}
         
+        for key in key_columns:
+            if cls.__dict__[key].use_table_codigo:
+                codigo = Codigo.find_by_columns(NOMETABELA = cls.__tablename__, NOMECAMPO = key)
+                if codigo:
+                    codigo = codigo[0]
+                    res[key] = str(codigo.ULTIMOCODIGO).rjust(cls.__dict__[key].use_table_codigo, "0")
+                    codigo.ULTIMOCODIGO += 1
+                    codigo.update()
+                    codigo.commit()            
         
+        return res
+                    
 
     @classmethod
     def _basic_query(cls) -> str:
@@ -186,7 +238,29 @@ class FDBModel:
 
             return " AND ".join(query), params
 
+    @staticmethod
+    def commit():
+        FDBHandler().commit()
+
+    def __repr__(self) -> str:
+        return f"Class {self.__class__.__name__} with {self.__dict__}"
+
 
 class Column:
-    def __init__(self, is_primary_key: bool = False) -> None:
+    def __init__(self, is_primary_key: bool = False, use_generator: str = None, use_table_codigo: int = None) -> None:
         self.is_primary_key = is_primary_key
+        self.use_generator = use_generator
+        self.use_table_codigo = use_table_codigo
+
+
+class Codigo(FDBModel):
+    __tablename__ = "CODIGO"
+
+    NOMETABELA = Column(is_primary_key=True)
+    NOMECAMPO = Column(is_primary_key=True)
+    ULTIMOCODIGO = Column()
+
+    def __init__(self, NOMETABELA, NOMECAMPO, ULTIMOCODIGO):
+        self.NOMETABELA = NOMETABELA
+        self.NOMECAMPO = NOMECAMPO
+        self.ULTIMOCODIGO = ULTIMOCODIGO
