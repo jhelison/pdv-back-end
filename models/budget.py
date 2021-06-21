@@ -1,4 +1,5 @@
 import sys
+from datetime import date, datetime
 
 sys.path.insert(0, './')
 
@@ -21,6 +22,7 @@ class Budget(FDBModel):
     ALIQDESCONTO = Column()
     VALORFRETE = Column()
     VALORACRESCIMO = Column()
+    HORA = Column()
     OBSNOTAFISCAL = Column()
     CODCFOP = Column()
     VALORDESCONTO = Column()
@@ -29,6 +31,7 @@ class Budget(FDBModel):
     VALORTOTALPRODUTOS = Column()
     CODTIPOMOVIMENTO = Column()
     TEMPO = Column()
+    DATACADASTRO = Column()
 
     #Adicionals
     IDENTIFICADORDESTINO = Column()
@@ -50,6 +53,13 @@ class Budget(FDBModel):
     INDPRESENCA = Column()
     VALORFCP = Column()
     VALORFCPSUBSTTRIBUTARIA = Column()
+    VALORTOTALPIS = Column()
+    VALORTOTALCOFINS = Column()
+    FLAGESTOQUELIBERADO = Column()
+    FLAGDESCAUTORIZADO = Column()
+    FLAGIMPRESSO = Column()
+    VALORTOTALISS = Column()
+    FLAGRESERVADO = Column()
     
     
     #The variables
@@ -72,6 +82,7 @@ class Budget(FDBModel):
                 ALIQDESCONTO = None,
                 VALORFRETE = None,
                 VALORACRESCIMO = None,
+                HORA = None,
                 OBSNOTAFISCAL = None,
                 CODCFOP = None,
                 VALORDESCONTO = None,
@@ -80,6 +91,7 @@ class Budget(FDBModel):
                 VALORTOTALPRODUTOS = None,
                 CODTIPOMOVIMENTO = None,
                 TEMPO = None,
+                DATACADASTRO = None,
 
                 IDENTIFICADORDESTINO = None,
                 VALORENTRADA = None,
@@ -100,6 +112,13 @@ class Budget(FDBModel):
                 INDPRESENCA = None,
                 VALORFCP = None,
                 VALORFCPSUBSTTRIBUTARIA = None,
+                VALORTOTALPIS = None,
+                VALORTOTALCOFINS = None,
+                FLAGESTOQUELIBERADO = None,
+                FLAGDESCAUTORIZADO = None,
+                FLAGIMPRESSO = None,
+                VALORTOTALISS = None,
+                FLAGRESERVADO = None,
 
                 CODPRECO = None,
                 CODEMPRESA = None,
@@ -119,6 +138,7 @@ class Budget(FDBModel):
         self.ALIQDESCONTO = ALIQDESCONTO
         self.VALORFRETE = VALORFRETE
         self.VALORACRESCIMO = VALORACRESCIMO
+        self.HORA = HORA
         self.OBSNOTAFISCAL = OBSNOTAFISCAL
         self.CODCFOP = CODCFOP
         self.VALORDESCONTO = VALORDESCONTO
@@ -127,33 +147,50 @@ class Budget(FDBModel):
         self.VALORTOTALPRODUTOS = VALORTOTALPRODUTOS
         self.CODTIPOMOVIMENTO = CODTIPOMOVIMENTO
         self.TEMPO = TEMPO
+        self.DATACADASTRO = DATACADASTRO
 
         #Adicionals
-        self.IDENTIFICADORDESTINO = IDENTIFICADORDESTINO if IDENTIFICADORDESTINO == None else "1"
-        self.VALORENTRADA = VALORENTRADA if VALORENTRADA == None else 0.0
-        self.CAMPOVALOR1 = CAMPOVALOR1 if CAMPOVALOR1 == None else 100.0
-        self.VALORTOTALIPI = VALORTOTALIPI if VALORTOTALIPI == None else 0.0
-        self.FLAGFRETE = FLAGFRETE if FLAGFRETE == None else "D"
-        self.VALORICMS = VALORICMS if VALORICMS == None else 0.0
-        self.BASEICMS = BASEICMS if BASEICMS == None else 0.0
-        self.VALOROUTRASDESPESAS = VALOROUTRASDESPESAS if VALOROUTRASDESPESAS == None else 0.0
-        self.VALORSUBSTTRIBUTARIA = VALORSUBSTTRIBUTARIA if VALORSUBSTTRIBUTARIA == None else 0.0
-        self.BASESUBSTTRIBUTARIA = BASESUBSTTRIBUTARIA if BASESUBSTTRIBUTARIA == None else 0.0
-        self.VALORSEGURO = VALORSEGURO if VALORSEGURO == None else 0.0
-        self.FLAGDELIVERY = FLAGDELIVERY if FLAGDELIVERY == None else "N"
-        self.FLAGSTATUS = FLAGSTATUS if FLAGSTATUS == None else "O"
-        self.FLAGPALM = FLAGPALM if FLAGPALM == None else "0"
-        self.RENTABILIDADE = RENTABILIDADE if RENTABILIDADE == None else 0.0
-        self.QUANTIDADEVOLUMES = QUANTIDADEVOLUMES if QUANTIDADEVOLUMES == None else 0
-        self.INDPRESENCA = INDPRESENCA if INDPRESENCA == None else "0"
-        self.VALORFCP = VALORFCP if VALORFCP == None else 0.0
-        self.VALORFCPSUBSTTRIBUTARIA = VALORFCPSUBSTTRIBUTARIA if VALORFCPSUBSTTRIBUTARIA == None else 0.0
+        self.IDENTIFICADORDESTINO = IDENTIFICADORDESTINO if IDENTIFICADORDESTINO != None else "1"
+        self.VALORENTRADA = VALORENTRADA if VALORENTRADA != None else 0.0
+        self.CAMPOVALOR1 = CAMPOVALOR1 if CAMPOVALOR1 != None else 100.0
+        self.VALORTOTALIPI = VALORTOTALIPI if VALORTOTALIPI != None else 0.0
+        self.FLAGFRETE = FLAGFRETE if FLAGFRETE != None else "D"
+        self.VALORICMS = VALORICMS if VALORICMS != None else 0.0
+        self.BASEICMS = BASEICMS if BASEICMS != None else 0.0
+        self.VALOROUTRASDESPESAS = VALOROUTRASDESPESAS if VALOROUTRASDESPESAS != None else 0.0
+        self.VALORSUBSTTRIBUTARIA = VALORSUBSTTRIBUTARIA if VALORSUBSTTRIBUTARIA != None else 0.0
+        self.BASESUBSTTRIBUTARIA = BASESUBSTTRIBUTARIA if BASESUBSTTRIBUTARIA != None else 0.0
+        self.VALORSEGURO = VALORSEGURO if VALORSEGURO != None else 0.0
+        self.FLAGDELIVERY = FLAGDELIVERY if FLAGDELIVERY != None else "N"
+        self.FLAGSTATUS = FLAGSTATUS if FLAGSTATUS != None else "O"
+        self.FLAGPALM = FLAGPALM if FLAGPALM != None else "0"
+        self.RENTABILIDADE = RENTABILIDADE if RENTABILIDADE != None else 0.0
+        self.QUANTIDADEVOLUMES = QUANTIDADEVOLUMES if QUANTIDADEVOLUMES != None else 0
+        self.INDPRESENCA = INDPRESENCA if INDPRESENCA != None else "0"
+        self.VALORFCP = VALORFCP if VALORFCP != None else 0.0
+        self.VALORFCPSUBSTTRIBUTARIA = VALORFCPSUBSTTRIBUTARIA if VALORFCPSUBSTTRIBUTARIA != None else 0.0
+        self.VALORTOTALPIS = VALORTOTALPIS if VALORTOTALPIS != None else 0.0
+        self.VALORTOTALCOFINS = VALORTOTALCOFINS if VALORTOTALCOFINS != None else 0.0
+        self.FLAGESTOQUELIBERADO = FLAGESTOQUELIBERADO if FLAGESTOQUELIBERADO != None else 'Y'
+        self.FLAGDESCAUTORIZADO = FLAGDESCAUTORIZADO if FLAGDESCAUTORIZADO != None else 'N'
+        self.FLAGIMPRESSO = FLAGIMPRESSO if FLAGIMPRESSO != None else 'N'
+        self.VALORTOTALISS = VALORTOTALISS if VALORTOTALISS != None else 0.0
+        self.FLAGRESERVADO = FLAGRESERVADO if FLAGRESERVADO != None else 'N'
 
         #The variables
-        self.CODPRECO = CODPRECO if CODPRECO == None else "000000001"
-        self.CODEMPRESA = CODEMPRESA if CODEMPRESA == None else 3
-        self.CODUSER = CODUSER if CODUSER == None else "000000010" #Importante, deve ser analisado no futuro
-        self.CODSETORESTOQUE = CODSETORESTOQUE if CODSETORESTOQUE == None else "000000001"
+        self.CODPRECO = CODPRECO if CODPRECO != None else "000000001"
+        self.CODEMPRESA = CODEMPRESA if CODEMPRESA != None else 3
+        self.CODUSER = CODUSER if CODUSER != None else "000000010" #Importante, deve ser analisado no futuro
+        self.CODSETORESTOQUE = CODSETORESTOQUE if CODSETORESTOQUE != None else "000000001"
+        
+    def _on_insert(self):
+        self.DATA = datetime.now().date()
+        self.HORA = datetime.now().time()
+        self.DATACADASTRO = datetime.now().date()
+        self.ALIQDESCONTO = self.ALIQDESCONTO if self.ALIQDESCONTO != None else 0.0
+        self.VALORACRESCIMO = self.VALORACRESCIMO if self.VALORACRESCIMO != None else 0.0
+        self.VALORDESCONTO = self.VALORDESCONTO if self.VALORDESCONTO != None else 0.0
+        self.ALIQACRESCIMO = self.ALIQACRESCIMO if self.ALIQACRESCIMO != None else 0.0
 
 budgets = Budget.all()
 
