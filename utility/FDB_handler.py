@@ -153,7 +153,7 @@ class FDBModel:
         if '_on_update' in self.__class__.__dict__:
             self._on_update()
 
-        data = {column: self.__dict__[column] for column in self._get_columns} #Secure way to get the data from the columns using only Columns class
+        data = {column: self.__dict__[column] for column in self._get_columns()} #Secure way to get the data from the columns using only Columns class
         
         primary_key = self._get_primary_key()
 
@@ -196,7 +196,7 @@ class FDBModel:
         for key, value in list(self._get_next_keys().items()):
             self.__dict__[key] = value
             
-        data = {column: self.__dict__[column] for column in self._get_columns}
+        data = {column: self.__dict__[column] for column in self._get_columns()}
                     
         query = """
         INSERT INTO
