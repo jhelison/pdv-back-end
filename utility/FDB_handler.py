@@ -223,7 +223,15 @@ class FDBModel:
                     res[key] = str(codigo.ULTIMOCODIGO).rjust(cls.__dict__[key].use_table_codigo, "0")
                     codigo.ULTIMOCODIGO += 1
                     codigo.update()
-                    codigo.commit()            
+                    codigo.commit()
+                    
+            elif cls.__dict__[key].use_generator:
+                query = f"""
+                SELECT NEXT VALUE FOR {cls.__dict__[key].use_generator} FROM RDB$DATABASE
+                """
+                res[key] = FDBHandler.fetchone_as_dict(query)['GEN_ID']
+                cls.commit()
+                
         
         return res
                     
