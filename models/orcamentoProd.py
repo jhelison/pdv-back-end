@@ -21,6 +21,13 @@ class BudgetProd(FDBModel):
     VALORACRESCIMOITEM = Column()
     VALORTOTAL = Column()
     DATAINCLUSAO = Column()
+    CODCFOP = Column() #Important
+    DESCRICAOPRODUTO = Column()
+    CUSTOREAL = Column() #What is this?
+    CODCALCULOICMS = Column() #Important
+    CODSITUACAOTRIBUTARIA = Column() #Important
+    CODCLASSIFICACAOFISCAL = Column() #Important
+    NUMEROITEM = Column()
     
     #Fixed components
     BASEICMS = Column()
@@ -56,6 +63,7 @@ class BudgetProd(FDBModel):
     QUANTIDADEEMBALAGEM = Column()
     FLAGTIPOACRESCIMOITEM = Column()
     FLAGTIPODESCONTOITEM = Column()
+    ALIQICMS = Column()
     
     #Var data
     CODEMPRESA = Column()
@@ -63,8 +71,9 @@ class BudgetProd(FDBModel):
     
     def __init__(self,
                 CODORCPROD,
-                CODORC = None,
-                CODPROD = None,
+                CODORC,
+                CODPROD,
+                
                 QUANTIDADE = None,
                 VALORUNITARIO = None,
                 PRECOTABELA = None,
@@ -74,6 +83,13 @@ class BudgetProd(FDBModel):
                 VALORACRESCIMOITEM = None,
                 VALORTOTAL = None,
                 DATAINCLUSAO = None,
+                CODCFOP = None,
+                DESCRICAOPRODUTO = None,
+                CUSTOREAL = None,
+                CODCALCULOICMS = None,
+                CODSITUACAOTRIBUTARIA = None,
+                CODCLASSIFICACAOFISCAL = None,
+                NUMEROITEM = None,
                 
                 BASEICMS = None,
                 VALORICMS = None,
@@ -108,6 +124,7 @@ class BudgetProd(FDBModel):
                 QUANTIDADEEMBALAGEM = None,
                 FLAGTIPOACRESCIMOITEM = None,
                 FLAGTIPODESCONTOITEM = None,
+                ALIQICMS = None,
                 
                 CODEMPRESA = None,
                 CODPRECO = None) -> None:
@@ -125,6 +142,13 @@ class BudgetProd(FDBModel):
         self.VALORACRESCIMOITEM = VALORACRESCIMOITEM
         self.VALORTOTAL = VALORTOTAL
         self.DATAINCLUSAO = DATAINCLUSAO
+        self.CODCFOP = CODCFOP
+        self.DESCRICAOPRODUTO = DESCRICAOPRODUTO
+        self.CUSTOREAL = CUSTOREAL
+        self.CODCALCULOICMS = CODCALCULOICMS
+        self.CODSITUACAOTRIBUTARIA = CODSITUACAOTRIBUTARIA
+        self.CODCLASSIFICACAOFISCAL = CODCLASSIFICACAOFISCAL
+        self.NUMEROITEM = NUMEROITEM
         
         self.BASEICMS = BASEICMS if BASEICMS != None else 0.0
         self.VALORICMS = VALORICMS if VALORICMS != None else 0.0
@@ -159,6 +183,7 @@ class BudgetProd(FDBModel):
         self.QUANTIDADEEMBALAGEM = QUANTIDADEEMBALAGEM if QUANTIDADEEMBALAGEM != None else 0.0
         self.FLAGTIPOACRESCIMOITEM = FLAGTIPOACRESCIMOITEM if FLAGTIPOACRESCIMOITEM != None else 'V'
         self.FLAGTIPODESCONTOITEM = FLAGTIPODESCONTOITEM if FLAGTIPODESCONTOITEM != None else 'V'
+        self.ALIQICMS = ALIQICMS if ALIQICMS != None else 0.0
         
         self.CODEMPRESA = CODEMPRESA if CODEMPRESA != None else 3
         self.CODPRECO = CODPRECO if CODPRECO != None else "000000001"
@@ -169,7 +194,7 @@ class BudgetProd(FDBModel):
     
 prods = BudgetProd.all(page=1)
 
-[print(prod) for prod in prods]
+[print(prod.CODCALCULOICMS) for prod in prods]
     
 # fixedData = {
 #     "BASEICMS": 0.0000,
