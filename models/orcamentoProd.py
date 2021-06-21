@@ -191,11 +191,6 @@ class BudgetProd(FDBModel):
     def _on_insert(self):
         self.DATAINCLUSAO = datetime.now()
     
-    
-prods = BudgetProd.all(page=1)
-
-[print(prod.CODCALCULOICMS) for prod in prods]
-    
 # fixedData = {
 #     "BASEICMS": 0.0000,
 #     "VALORICMS": 0.0000,

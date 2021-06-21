@@ -4,6 +4,7 @@ from datetime import date, datetime
 sys.path.insert(0, './')
 
 from utility.FDB_handler import FDBModel, Column
+from models.orcamentoProd import BudgetProd
 
 class Budget(FDBModel):
     __tablename__ = "ORCAMENTO"
@@ -183,6 +184,11 @@ class Budget(FDBModel):
         self.CODUSER = CODUSER if CODUSER != None else "000000010" #Importante, deve ser analisado no futuro
         self.CODSETORESTOQUE = CODSETORESTOQUE if CODSETORESTOQUE != None else "000000001"
         
+    def get_all_budget_prod(self):
+        if self.CODORC:
+            return(BudgetProd.find_by_columns(CODORC = self.CODORC))
+        return []
+        
     def _on_insert(self):
         self.DATA = datetime.now().date()
         self.HORA = datetime.now().time()
@@ -192,10 +198,12 @@ class Budget(FDBModel):
         self.VALORDESCONTO = self.VALORDESCONTO if self.VALORDESCONTO != None else 0.0
         self.ALIQACRESCIMO = self.ALIQACRESCIMO if self.ALIQACRESCIMO != None else 0.0
 
-budgets = Budget.all()
+budgets = Budget.find_by_columns(exact=False, NOMECLI="jhelis")
 
 for budget in budgets:
-    print(budget.CODORC, budget.NUMEROORCAMENTO, budget.VALORTOTALORCAMENTO, budget.DATA)         
+    print(budget.NOMECLI)
+    prods = budget.get_all_budget_prod()
+    print(len(prods))    
 
 
 # from models.orcamentoProd import buildBudgetProductData, getORCAMENTOPRODCodes
