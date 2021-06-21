@@ -153,7 +153,8 @@ class FDBModel:
         if '_on_update' in self.__class__.__dict__:
             self._on_update()
 
-        data = self.__dict__.copy()
+        data = {column: self.__dict__[column] for column in self._get_columns} #Secure way to get the data from the columns using only Columns class
+        
         primary_key = self._get_primary_key()
 
         if not primary_key:
@@ -194,6 +195,8 @@ class FDBModel:
         
         for key, value in list(self._get_next_keys().items()):
             self.__dict__[key] = value
+            
+        data = {column: self.__dict__[column] for column in self._get_columns}
                     
         query = """
         INSERT INTO
@@ -201,10 +204,10 @@ class FDBModel:
         VALUES
             ({})
         """.format(self.__tablename__,
-                   ", ".join([key for key, value in self.__dict__.items() if value != None]),
-                   ", ".join(["?" for _, value in self.__dict__.items() if value != None]))
+                   ", ".join([key for key, value in data.items() if value != None]),
+                   ", ".join(["?" for _, value in data.items() if value != None]))
         
-        FDBHandler().execute_query(query, [value for _, value in self.__dict__.items() if value != None])
+        FDBHandler().execute_query(query, [value for _, value in data.items() if value != None])
 
     @classmethod
     def _get_next_keys(cls) -> dict:
